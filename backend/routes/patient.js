@@ -1,6 +1,7 @@
 const express = require('express');
 const { body } = require('express-validator');
 const patientController = require('../controllers/patient');
+const isAuth = require('../middlewares/isAuth');
 
 const router = express.Router();
 
@@ -18,5 +19,10 @@ router.post(
   ],
   patientController.registerPatient
 );
+
+// @route   GET /patient
+// @desc    Get patient profile
+// @access  protected
+router.get('/', isAuth, patientController.getPatientProfile);
 
 module.exports = router;
