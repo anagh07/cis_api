@@ -22,6 +22,7 @@ app.get('/', (req, res, next) => {
 
 // Routes
 app.use('/patient', require('./routes/patient'));
+app.use('/auth', require('./routes/auth'));
 
 // Connect DB and Initialize server
 const PORT = process.env.PORT;

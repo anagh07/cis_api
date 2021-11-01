@@ -15,7 +15,7 @@ const Patient = sequelize.define(
       // allowNull defaults to true
     },
     dob: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: false,
     },
     email: {

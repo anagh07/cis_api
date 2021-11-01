@@ -13,7 +13,8 @@ exports.registerPatient = async (req, res, next) => {
   }
 
   // Check if patient already exists
-  const { first_name, last_name, email, dob, password } = req.body;
+  const { first_name, last_name, email, dob } = req.body;
+  const passedPassword = req.body.password;
   try {
     const existing_patient = await Patient.findOne({ where: { email: email } });
     if (existing_patient) {
@@ -26,7 +27,7 @@ exports.registerPatient = async (req, res, next) => {
 
   // Encrypt password
   const salt = await bcrypt.genSalt(12);
-  const hashedPassword = await bcrypt.hash(password, salt);
+  const hashedPassword = await bcrypt.hash(passedPassword, salt);
 
   // Save user
   const payload = {
@@ -36,17 +37,36 @@ exports.registerPatient = async (req, res, next) => {
     dob: dob,
   };
   try {
-    const patient = await Patient.create({ ...payload, password: hashedPassword });
+    const existingPatient = await Patient.create({
+      ...payload,
+      password: hashedPassword,
+    });
     // res.status(200).json(patient);
+
+    // Return jwt
+    const token = await jwt.sign(
+      { patient: { id: existingPatient.id, email: existingPatient.email } },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: 36000,
+      }
+    );
+    return res.status(200).json({ token });
   } catch (error) {
     console.log(error);
     return res.status(500).send('Server error');
   }
+};
 
-  // Return jwt
+exports.getPatientProfile = async (req, res, next) => {
+  const { patient } = req;
+
   try {
-    const token = await jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 36000 });
-    return res.status(200).json({ token });
+    // Get profile from db
+    const patientProfile = await Patient.findByPk(patient.id);
+    if (!patientProfile)
+      return res.status(400).json({ errors: [{ msg: 'Profile not found' }] });
+    return res.status(200).json(patientProfile);
   } catch (error) {
     console.log(error);
     return res.status(500).send('Server error');
