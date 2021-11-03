@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
 import { Typography, Button } from '@material-ui/core';
+import {Link} from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   toolbar: theme.mixins.toolbar,
@@ -30,7 +31,7 @@ function MainContent() {
         <Typography variant='h6'>Collecting data for COVID-19 Patients</Typography>
       </div>
       <div className={classes.content}>
-        <Button variant="contained">
+        <Button component={Link} to="/selfassessment" variant="contained">
           Self Assessment Test
         </Button>
       </div>
