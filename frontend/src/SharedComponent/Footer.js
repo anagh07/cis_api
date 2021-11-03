@@ -3,14 +3,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import { Typography, MenuItem, Toolbar }  from '@material-ui/core';
 
-const drawerWidth = 240;
-
 const useStyles = makeStyles(theme => ({
   appBar: {
     top: 'auto',
     bottom: 0,
-    // width: `calc(100% - ${drawerWidth}px)`,
-    // marginLeft: drawerWidth,
   },
   menuButton: {
     marginRight: theme.spacing(2),
