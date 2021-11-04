@@ -39,14 +39,20 @@ export const styles = StyleSheet.create({
       backgroundColor: '#579e94',
     }
   },
+  optionStyle: {
+    fontSize: '15px',
+  }
 })
 
 class SignUpContent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: '',
+      firstName: '',
+      lastName: '',
+      dob: '',
       email: '',
+      role: '',
       password: '',
       retypePassword: '',
     }
@@ -60,16 +66,28 @@ class SignUpContent extends Component {
   }
 
   handleSubmit = (event) => {
-    const apiBaseUrl = "http://localhost:5000/api/";
+    const authUrl = "";
+    const apiBaseUrl = "http://localhost:5000/cis/auth/";
+    const { role } = this.state;
     const request = {
-      name: this.state.name,
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      dob: this.state.dob,
       email: this.state.email,
       password :this.state.password,
-      retypePassword: this.state.retypePassword,
     }
     debugger
     console.log(request);
-    axios.post(apiBaseUrl + 'signup', request).then(function (response) {
+    if (role == 'manager') {
+      authUrl = apiBaseUrl + 'manager';
+    } else if (role == 'patient') {
+      authUrl = apiBaseUrl + 'patient';
+    } else if (role == 'doctor') {
+      authUrl = apiBaseUrl + 'doctor';
+    } else {
+      authUrl = apiBaseUrl + 'nurse';
+    }
+    axios.post(authUrl, request).then(function (response) {
       // TODO - Check response from the backend
       console.log(response);
     }).catch(function (error) {
@@ -78,7 +96,7 @@ class SignUpContent extends Component {
   }
 
   render() {
-    const { name, email, password, retypePassword } = this.state;
+    const { firstName, lastName, dob, email, password, retypePassword, role } = this.state;
     return (
       <Grid container spacing={4}>
         <Grid item xs></Grid>
@@ -86,11 +104,27 @@ class SignUpContent extends Component {
           <h3 className={css(styles.heading)}>SIGNUP</h3>
           <hr/><br/>
           <form>
-            <label>Name:</label>
-            <input name='name'
+            <label>First Name:</label>
+            <input name='firstName'
                 onChange={this.handleChange}
                 type='text'
-                value={name}
+                value={firstName}
+                className={css(styles.inputStyle)}
+            />
+            <br/>
+            <label>Last Name:</label>
+            <input name='lastName'
+                onChange={this.handleChange}
+                type='text'
+                value={lastName}
+                className={css(styles.inputStyle)}
+            />
+            <br/>
+            <label>Date of Birth:</label>
+            <input name='dob'
+                onChange={this.handleChange}
+                type='text'
+                value={dob}
                 className={css(styles.inputStyle)}
             />
             <br/>
@@ -101,6 +135,14 @@ class SignUpContent extends Component {
                 value={email}
                 className={css(styles.inputStyle)}
             />
+            <br/>
+            <label>Role:</label><br/>
+            <select name="role" onChange={this.handleChange} value={role} className={css(styles.inputStyle)}>
+              <option value="patient">Patient</option>
+              <option value="manager">Manager</option>
+              <option value="doctor">Doctor</option>
+              <option value="nurse">Nurse</option>
+            </select>
             <br/>
             <label>Password:</label>
             <input name='password'
