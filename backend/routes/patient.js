@@ -1,6 +1,7 @@
 const express = require('express');
 const { body } = require('express-validator');
 const patientController = require('../controllers/patient');
+const selfAssessmentController = require('../controllers/selfassessment');
 const isAuthPatient = require('../middlewares/isAuth').isAuthPatient;
 
 const router = express.Router();
@@ -24,5 +25,19 @@ router.post(
 // @desc    Get patient profile
 // @access  protected
 router.get('/', isAuthPatient, patientController.getPatientProfile);
+
+// @route   POST /patient/selfassessment
+// @desc    Submit self assessment form
+// @access  protected
+router.post(
+  '/selfassessment',
+  isAuthPatient,
+  [
+    body('a1', 'Field missing/invalid answer-1').trim().notEmpty().isBoolean(),
+    body('a2', 'Field missing/invalid answer-2').trim().isBoolean().notEmpty(),
+    body('a3', 'Field missing/invalid answer-3').trim().isBoolean().notEmpty(),
+  ],
+  selfAssessmentController.submitSelfAssessment
+);
 
 module.exports = router;

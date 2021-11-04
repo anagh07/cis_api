@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 require('dotenv').config();
 const db = require('./db/dbconnect');
+const dbsync = require('./db/dbsync');
 
 // Body parser
 app.use(express.json());
@@ -29,6 +30,7 @@ app.use('/auth', require('./routes/auth'));
 const PORT = process.env.PORT;
 (async function () {
   await db.connetDb();
+  await dbsync();
   app.listen(PORT, () => {
     console.log(`#### Server running on port ${PORT}...`);
   });
