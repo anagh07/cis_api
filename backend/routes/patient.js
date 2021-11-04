@@ -40,4 +40,18 @@ router.post(
   selfAssessmentController.submitSelfAssessment
 );
 
+// @route   GET /patient/selfassessment
+// @desc    Retrieve self assessments
+// @access  protected
+router.get(
+  '/selfassessment',
+  isAuthPatient,
+  [
+    body('a1', 'Field missing/invalid answer-1').trim().notEmpty().isBoolean(),
+    body('a2', 'Field missing/invalid answer-2').trim().isBoolean().notEmpty(),
+    body('a3', 'Field missing/invalid answer-3').trim().isBoolean().notEmpty(),
+  ],
+  selfAssessmentController.getSelfAssessments
+);
+
 module.exports = router;
