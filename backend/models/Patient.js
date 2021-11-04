@@ -26,6 +26,10 @@ const Patient = sequelize.define(
       type: DataTypes.STRING(255),
       allowNull: false,
     },
+    auth: {
+      type: DataTypes.STRING(10),
+      defaultValue: 'patient',
+    },
   },
   {
     // Other model options go here
@@ -34,7 +38,12 @@ const Patient = sequelize.define(
 
 // Create table if not already created
 (async () => {
-  await sequelize.sync();
+  try {
+    await sequelize.sync();
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send('Server error');
+  }
 })();
 
 module.exports = Patient;
