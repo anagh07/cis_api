@@ -45,7 +45,13 @@ exports.registerPatient = async (req, res, next) => {
 
     // Return jwt
     const token = await jwt.sign(
-      { patient: { id: existingPatient.id, email: existingPatient.email } },
+      {
+        patient: {
+          id: existingPatient.id,
+          email: existingPatient.email,
+          auth: 'patient',
+        },
+      },
       process.env.JWT_SECRET,
       {
         expiresIn: 36000,
@@ -60,13 +66,13 @@ exports.registerPatient = async (req, res, next) => {
 
 exports.getPatientProfile = async (req, res, next) => {
   const { patient } = req;
-
   try {
     // Get profile from db
     const patientProfile = await Patient.findByPk(patient.id);
     if (!patientProfile)
       return res.status(400).json({ errors: [{ msg: 'Profile not found' }] });
-    return res.status(200).json(patientProfile);
+    const { id, first_name, last_name, email, dob } = patientProfile;
+    return res.status(200).json({ id, first_name, last_name, email, dob });
   } catch (error) {
     console.log(error);
     return res.status(500).send('Server error');

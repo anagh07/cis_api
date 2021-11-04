@@ -4,16 +4,16 @@ const authController = require('../controllers/auth');
 
 const router = express.Router();
 
-// @route   POST /auth/patient
-// @desc    Login as patient
+// @route   POST /auth
+// @desc    Login as patient, manager, nurse, doctor
 // @access  public
 router.post(
-  '/patient',
+  '/',
   [
     body('email', 'Invalid email').trim().isEmail().notEmpty(),
     body('password', 'Invalid password').trim().notEmpty(),
   ],
-  authController.loginPatient
+  authController.login
 );
 
 module.exports = router;
