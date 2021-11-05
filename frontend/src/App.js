@@ -1,9 +1,4 @@
 import './App.css';
-import Header from './SharedComponent/Header';
-import HomePage from './SharedComponent/HomePage';
-import Footer from './SharedComponent/Footer';
-import Login from './SharedComponent/Login';
-import SelfAssessment from './SharedComponent/SelfAssessment';
 
 
 import {
@@ -11,6 +6,9 @@ import {
   Switch,
   Route
 } from "react-router-dom";
+import Header from './SharedComponent/Header';
+import Footer from './SharedComponent/Footer';
+import SelfAssessment from './SharedComponent/SelfAssessment';
 import HomePage from './DisplayComponent/HomePage';
 import LoginPage from './DisplayComponent/LoginPage';
 import SignUpPage from './DisplayComponent/SignUpPage';

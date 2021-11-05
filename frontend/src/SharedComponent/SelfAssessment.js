@@ -199,13 +199,12 @@ class SelfAssessment extends Component {
               </ToggleButtonGroup>
             </div>
 
-        <Button onClick={this.handleSubmit} variant="contained" style={{width:"20%", margin: '0 auto', display: "flex"}}>
+        <Button onClick={this.handleSubmit} variant="contained" style={{width:"20%", margin: '0 auto', display: "flex", backgroundColor: "#1ea694"}}>
           Submit
         </Button>
           </FormControl>          
         </div>
       </Paper>
-      <Footer />
     </div>
 
     );
