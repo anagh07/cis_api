@@ -1,49 +1,37 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { StyleSheet, css } from 'aphrodite';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
-import MenuIcon from '@material-ui/icons/Face';
 import { MenuItem } from '@material-ui/core';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
-import Login from './Login';
+import { Link } from "react-router-dom";
 
-const drawerWidth = 240;
-
-const useStyles = makeStyles(theme => ({
+export const styles = StyleSheet.create({
   appBar: {
-    // width: `calc(100% - ${drawerWidth}px)`,
-    // marginLeft: drawerWidth,
+    backgroundColor: "#1ea694",
   },
-  menuButton: {
-    marginRight: theme.spacing(2),
+  menuItem: {
+    marginLeft: "10px",
   },
-  title: {
-    flexGrow: 1,
-  },
-}));
+  menuLink: {
+    color: "white",
+    textDecoration: "none",
+  }
+});
 
 function Header() {
-  const classes = useStyles();
-
   return (
-    <AppBar position='fixed' className={classes.appBar}>
+    <AppBar position='fixed' className={css(styles.appBar)}>
       <Toolbar>
         <MenuItem>
-          <Typography variant='h6' className={classes.title}>
+          <Link to="/" className={css(styles.menuLink)}>
             COVID Info System
-          </Typography>
+          </Link>
         </MenuItem>
         <MenuItem style={{ marginLeft: "auto", marginRight: -12 }}>
-
-              <Link to="/login" variant='h6'>Login</Link>                        
+          <Link to="/signup" className={css(styles.menuLink)}>Signup</Link>
+        </MenuItem>
+        <MenuItem className={css(styles.menuItem)}>
+          <Link to="/login" className={css(styles.menuLink)}>Login</Link>
         </MenuItem>
       </Toolbar>
     </AppBar>

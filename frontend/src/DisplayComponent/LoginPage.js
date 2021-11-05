@@ -1,8 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Header from './Header';
-import MainContent from './MainContent';
-import Footer from './Footer';
+import Header from '../SharedComponent/Header';
+import LoginContent from '../SharedComponent/LoginContent';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -14,8 +13,9 @@ function Login() {
   const classes = useStyles();
 
   return (
-    <div>
-      This is login page
+    <div className={classes.root}>
+      <Header />
+      <LoginContent />
     </div>
   );
 }

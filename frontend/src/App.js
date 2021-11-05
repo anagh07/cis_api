@@ -5,19 +5,23 @@ import Footer from './SharedComponent/Footer';
 import Login from './SharedComponent/Login';
 import SelfAssessment from './SharedComponent/SelfAssessment';
 
+
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  Link
+  Route
 } from "react-router-dom";
+import HomePage from './DisplayComponent/HomePage';
+import LoginPage from './DisplayComponent/LoginPage';
+import SignUpPage from './DisplayComponent/SignUpPage';
 
 function App() {
   return (
     <Router>
       <Switch>
         <Route exact component={HomePage} path="/" />
-        <Route exact component={Login} path="/login" />
+        <Route exact component={LoginPage} path="/login" />
+        <Route exact component={SignUpPage} path="/signup" />
         <Route exact component={SelfAssessment} path="/selfassessment" />
       </Switch>
     </Router>
