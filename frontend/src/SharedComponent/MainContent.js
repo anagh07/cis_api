@@ -30,11 +30,11 @@ function MainContent() {
         <Typography variant='h6'>Collecting data for COVID-19 Patients</Typography>
       </div>
       <div className={classes.content}>
-        <Button variant="contained">
+        <Button component={Link} to="/selfassessment" variant="contained">
           Self Assessment Test
         </Button>
       </div>
-      <Link to="/manager_dashboard">Manager Dashboard</Link>      
+      <Link to="/manager_dashboard">Manager Dashboard</Link>
     </main>
   );
 }
