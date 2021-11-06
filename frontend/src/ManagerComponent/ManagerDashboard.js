@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Grid } from '@material-ui/core';
 import { StyleSheet, css } from 'aphrodite';
 import axios from 'axios';
-import { Link } from "react-router-dom";
 
 export const styles = StyleSheet.create({
   root: {
@@ -42,23 +41,10 @@ export const styles = StyleSheet.create({
   },
   optionStyle: {
     fontSize: '15px',
-  },
-  linkTag: {
-    color: '#55967e',
-    fontWeight: 'bold',
-    padding: '5px 0 10px 5px',
-    width: '100%',
-    ':hover': {
-      color: '#285943',
-      textDecoration: 'none'
-    }
-  },
-  signupText: {
-    paddingBottom: '5px'
-  },
+  }
 })
 
-class SignUpContent extends Component {
+class ManagerDashboardPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -81,8 +67,7 @@ class SignUpContent extends Component {
 
   handleSubmit = (event) => {
     const authUrl = "";
-    const apiBaseUrl = "https://cis-6841.herokuapp.com/cis/auth/";
-    // const apiBaseUrl = "http://localhost:5000/cis/auth/";
+    const apiBaseUrl = "http://localhost:5000/cis/auth/";
     const { role } = this.state;
     const request = {
       firstName: this.state.firstName,
@@ -91,12 +76,7 @@ class SignUpContent extends Component {
       email: this.state.email,
       password :this.state.password,
     }
-    axios.interceptors.response.use(null, (error) => {
-      return Promise.reject(error);
-    });
-    const headers = {
-      'Content-Type': 'application/json',
-    }
+    debugger
     console.log(request);
     if (role === 'manager') {
       authUrl = apiBaseUrl + 'manager';
@@ -107,9 +87,8 @@ class SignUpContent extends Component {
     } else {
       authUrl = apiBaseUrl + 'nurse';
     }
-    axios.post(authUrl, request, {
-      headers: headers
-    }).then(function (response) {
+    axios.post(authUrl, request).then(function (response) {
+      // TODO - Check response from the backend
       console.log(response);
     }).catch(function (error) {
       console.log(error);
@@ -182,11 +161,6 @@ class SignUpContent extends Component {
             />
             <br/>
             <button className={css(styles.loginButton)} onClick={this.handleSubmit}>SIGNUP</button>
-            <br/>
-            <div className={css(styles.signupText)}>
-              Already have an account?
-              <Link className={css(styles.linkTag)} to='/login'>Login</Link>
-            </div>
           </form>
         </Grid>
         <Grid item xs></Grid>
@@ -195,4 +169,4 @@ class SignUpContent extends Component {
   }
 }
 
-export default SignUpContent
+export default ManagerDashboardPage;

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Grid } from '@material-ui/core';
 import { StyleSheet, css } from 'aphrodite';
 import axios from 'axios';
+import { Link } from "react-router-dom";
 
 export const styles = StyleSheet.create({
   root: {
@@ -39,6 +40,19 @@ export const styles = StyleSheet.create({
       backgroundColor: '#579e94',
     }
   },
+  linkTag: {
+    color: '#55967e',
+    fontWeight: 'bold',
+    padding: '5px 0 10px 5px',
+    width: '100%',
+    ':hover': {
+      color: '#285943',
+      textDecoration: 'none'
+    }
+  },
+  signupText: {
+    paddingBottom: '5px'
+  },
 })
 
 class LoginContent extends Component {
@@ -58,15 +72,22 @@ class LoginContent extends Component {
   }
 
   handleSubmit = (event) => {
-    const apiBaseUrl = "http://localhost:5000/api/";
+    // const apiBaseUrl = "http://localhost:5000/api/";
+    const apiBaseUrl = "https://cis-6841.herokuapp.com/cis/auth";
     const request = {
       email: this.state.email,
       password :this.state.password,
     }
-    // console.log(request);
-    axios.post(apiBaseUrl + 'login', request).then(function (response) {
-      // TODO - Check response from the backend
-      console.log(response);
+    axios.interceptors.response.use(null, (error) => {
+      return Promise.reject(error);
+    });
+    const headers = {
+      'Content-Type': 'application/json',
+    }
+    axios.post(apiBaseUrl, request, {
+      headers: headers
+    }).then(function (response) {
+      console.log("Hello");
     }).catch(function (error) {
       console.log(error);
     });
@@ -98,6 +119,11 @@ class LoginContent extends Component {
             />
             <br/>
             <button className={css(styles.loginButton)} onClick={this.handleSubmit}>LOGIN</button>
+            <br/>
+            <div className={css(styles.signupText)}>
+              Don't have an account?
+              <Link className={css(styles.linkTag)} to='/signup'>Sign up</Link>
+            </div>
           </form>
         </Grid>
         <Grid item xs></Grid>

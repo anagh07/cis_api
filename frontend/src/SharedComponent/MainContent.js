@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, Button } from '@material-ui/core';
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   toolbar: theme.mixins.toolbar,
@@ -34,6 +34,7 @@ function MainContent() {
           Self Assessment Test
         </Button>
       </div>
+      <Link to="/manager_dashboard">Manager Dashboard</Link>
     </main>
   );
 }
