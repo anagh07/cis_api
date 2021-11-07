@@ -26,6 +26,12 @@ const Patient = sequelize.define(
       type: DataTypes.STRING(255),
       allowNull: false,
     },
+    address: {
+      type: DataTypes.STRING(),
+    },
+    phone: {
+      type: DataTypes.STRING(15),
+    },
     auth: {
       type: DataTypes.STRING(10),
       defaultValue: 'patient',

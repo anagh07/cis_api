@@ -13,7 +13,7 @@ exports.registerPatient = async (req, res, next) => {
   }
 
   // Check if patient already exists
-  const { first_name, last_name, email, dob } = req.body;
+  const { first_name, last_name, email, dob, address, phone } = req.body;
   const passedPassword = req.body.password;
   try {
     const existing_patient = await Patient.findOne({ where: { email: email } });
@@ -31,10 +31,12 @@ exports.registerPatient = async (req, res, next) => {
 
   // Save user
   const payload = {
-    first_name: first_name,
-    last_name: last_name,
-    email: email,
-    dob: dob,
+    first_name,
+    last_name,
+    email,
+    dob,
+    address,
+    phone,
   };
   try {
     const existingPatient = await Patient.create({
@@ -71,8 +73,10 @@ exports.getPatientProfile = async (req, res, next) => {
     const patientProfile = await Patient.findByPk(patient.id);
     if (!patientProfile)
       return res.status(400).json({ errors: [{ msg: 'Profile not found' }] });
-    const { id, first_name, last_name, email, dob } = patientProfile;
-    return res.status(200).json({ id, first_name, last_name, email, dob });
+    const { id, first_name, last_name, email, dob, address, phone } = patientProfile;
+    return res
+      .status(200)
+      .json({ id, first_name, last_name, email, dob, address, phone });
   } catch (error) {
     console.log(error);
     return res.status(500).send('Server error');
