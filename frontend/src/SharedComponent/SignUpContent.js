@@ -15,31 +15,6 @@ export const styles = StyleSheet.create({
     marginTop: '8%',
     fontWeight: 'bold',
   },
-  inputStyle: {
-    margin: '5px 0 10px 0',
-    padding: '5px',
-    border: '1px solid #bfbfbf',
-    borderRadius: '3px',
-    boxSizing: 'border-box',
-    width: '100%',
-    height: '40px',
-  },
-  loginButton: {
-    margin: '10px 0 0 0',
-    padding: '7px 10px',
-    border: '1px solid #efffff',
-    borderRadius: '3px',
-    backgroundColor: '#1ea694',
-    width: '100%',
-    fontSize: '15px',
-    color: 'white',
-    display: 'block',
-    height: '40px',
-    ':hover': {
-      cursor: 'pointer',
-      backgroundColor: '#579e94',
-    }
-  },
   optionStyle: {
     fontSize: '15px',
   },
@@ -130,7 +105,7 @@ class SignUpContent extends Component {
                 onChange={this.handleChange}
                 type='text'
                 value={firstName}
-                className={css(styles.inputStyle)}
+                className="Input-style"
             />
             <br/>
             <label>Last Name:</label>
@@ -138,7 +113,7 @@ class SignUpContent extends Component {
                 onChange={this.handleChange}
                 type='text'
                 value={lastName}
-                className={css(styles.inputStyle)}
+                className="Input-style"
             />
             <br/>
             <label>Date of Birth:</label>
@@ -146,7 +121,7 @@ class SignUpContent extends Component {
                 onChange={this.handleChange}
                 type='text'
                 value={dob}
-                className={css(styles.inputStyle)}
+                className="Input-style"
             />
             <br/>
             <label>Email Address:</label>
@@ -154,11 +129,11 @@ class SignUpContent extends Component {
                 onChange={this.handleChange}
                 type='text'
                 value={email}
-                className={css(styles.inputStyle)}
+                className="Input-style"
             />
             <br/>
             <label>Role:</label><br/>
-            <select name="role" onChange={this.handleChange} value={role} className={css(styles.inputStyle)}>
+            <select name="role" onChange={this.handleChange} value={role} className="Input-style">
               <option value="patient">Patient</option>
               <option value="manager">Manager</option>
               <option value="doctor">Doctor</option>
@@ -170,7 +145,7 @@ class SignUpContent extends Component {
                 onChange={this.handleChange}
                 type='password'
                 value={password}
-                className={css(styles.inputStyle)}
+                className="Input-style"
             />
             <br/>
             <label>Re-type Password:</label>
@@ -178,10 +153,10 @@ class SignUpContent extends Component {
                 onChange={this.handleChange}
                 type='password'
                 value={retypePassword}
-                className={css(styles.inputStyle)}
+                className="Input-style"
             />
             <br/>
-            <button className={css(styles.loginButton)} onClick={this.handleSubmit}>SIGNUP</button>
+            <button className="Form-button" onClick={this.handleSubmit}>SIGNUP</button>
             <br/>
             <div className={css(styles.signupText)}>
               Already have an account?
