@@ -12,6 +12,7 @@ import SelfAssessment from './SharedComponent/SelfAssessment';
 import HomePage from './DisplayComponent/HomePage';
 import LoginPage from './DisplayComponent/LoginPage';
 import SignUpPage from './DisplayComponent/SignUpPage';
+import PatientDashboard from './PatientDashboard/PatientDashboard';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route exact component={LoginPage} path="/login" />
         <Route exact component={SignUpPage} path="/signup" />
         <Route exact component={SelfAssessment} path="/selfassessment" />
+        <Route exact component={PatientDashboard} path="/patientdashboard" />
       </Switch>
     </Router>
   );

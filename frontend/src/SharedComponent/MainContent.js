@@ -33,6 +33,9 @@ function MainContent() {
         <Button component={Link} to="/selfassessment" variant="contained">
           Self Assessment Test
         </Button>
+        <Button component={Link} to="/patientdashboard" variant="contained">
+          Patient Dashboard
+        </Button>
       </div>
     </main>
   );
