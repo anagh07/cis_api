@@ -15,6 +15,7 @@ import ManagerDashboardPage from './DisplayComponent/ManagerDashboardPage';
 import AddDoctorPage from './DisplayComponent/AddDoctorPage';
 import AddNursePage from './DisplayComponent/AddNursePage';
 import AddPatientPage from './DisplayComponent/AddPatientPage';
+import PatientDashboard from './PatientDashboard/PatientDashboard';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route exact component={AddDoctorPage} path="/add_doctor" />
         <Route exact component={AddNursePage} path="/add_nurse" />
         <Route exact component={AddPatientPage} path="/add_patient" />
+        <Route exact component={PatientDashboard} path="/patientdashboard" />
       </Switch>
     </Router>
   );
