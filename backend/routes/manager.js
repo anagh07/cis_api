@@ -44,14 +44,12 @@ router.post(
 );
 
 // @route   DELETE /manager/nurse
-// @desc    Register new nurse
+// @desc    Remove a nurse
 // @access  protected: manager
 router.delete(
   '/nurse',
   isAuthManager,
-  [
-    body('email', 'Invalid/empty email').trim().isEmail(),
-  ],
+  [body('email', 'Invalid/empty email').trim().isEmail()],
   managerController.removeNurse
 );
 
@@ -59,5 +57,37 @@ router.delete(
 // @desc    Retrieve list of all nurses
 // @access  protected: manager
 router.get('/nurselist', isAuthManager, managerController.nurseList);
+
+// @route   POST /manager/doctor
+// @desc    Register new doctor
+// @access  protected: manager
+router.post(
+  '/doctor',
+  isAuthManager,
+  [
+    body('first_name', 'Invalid/empty first name').trim().notEmpty(),
+    body('last_name', 'Invalid/empty last name').trim().notEmpty(),
+    body('email', 'Invalid/empty email').trim().isEmail(),
+    body('dob', 'Invalid/empty dob').trim().notEmpty(),
+    body('password', 'Invalid/empty password').trim().isLength({ min: 6 }),
+    body('registration_number', 'Invalid/empty registration_number').trim().notEmpty(),
+  ],
+  managerController.registerDoctor
+);
+
+// @route   DELETE /manager/doctor
+// @desc    Remove a doctor
+// @access  protected: manager
+router.delete(
+  '/doctor',
+  isAuthManager,
+  [body('email', 'Invalid/empty email').trim().isEmail()],
+  managerController.removeDoctor
+);
+
+// @route   GET /manager/doctorlist
+// @desc    Retrieve list of all doctors
+// @access  protected: manager
+router.get('/doctorlist', isAuthManager, managerController.doctorList);
 
 module.exports = router;

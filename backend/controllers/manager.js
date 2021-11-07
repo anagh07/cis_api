@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Manager = require('../models/Manager');
 const Nurse = require('../models/Nurse');
+const Doctor = require('../models/Doctor');
 
 exports.registerManager = async (req, res, next) => {
   // Check if input data has errors
@@ -106,7 +107,7 @@ exports.registerNurse = async (req, res, next) => {
       address,
       phone,
       registration_number,
-      admin_approval: true,
+      verified: true,
     };
 
     // Save to db
@@ -146,6 +147,89 @@ exports.nurseList = async (req, res, next) => {
   try {
     const nurseList = await Nurse.findAll();
     return res.status(200).json({ nurseList });
+  } catch (error) {
+    return res.status(500).send('Server error');
+  }
+};
+
+exports.registerDoctor = async (req, res, next) => {
+  // Check if input data has errors
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      errors: errors.array(),
+    });
+  }
+
+  // Check if it already exist
+  const {
+    first_name,
+    last_name,
+    email,
+    password,
+    dob,
+    address,
+    phone,
+    registration_number,
+  } = req.body;
+  try {
+    const existingDoctor = await Doctor.findOne({ where: { email: email } });
+    if (existingDoctor)
+      return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
+
+    // Encrypt password with bcrypt
+    const salt = await bcrypt.genSalt(12);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const doctor = {
+      first_name,
+      last_name,
+      email,
+      password: hashedPassword,
+      dob,
+      address,
+      phone,
+      registration_number,
+      verified: true,
+    };
+
+    // Save to db
+    const createdDoctor = await Doctor.create(doctor);
+
+    // Sign and return jwt
+    const token = await jwt.sign(
+      {
+        nurse: {
+          id: createdDoctor.id,
+          email: createdDoctor.email,
+          auth: 'doctor',
+        },
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: 3600 }
+    );
+    return res.status(200).json({ token });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send('Server error');
+  }
+};
+
+exports.removeDoctor = async (req, res, next) => {
+  const { email } = req.body;
+  try {
+    const doctor = await Doctor.findOne({ where: { email } });
+    await doctor.destroy();
+    return res.status(200).json({ msg: 'Deleted successfully' });
+  } catch (error) {
+    return res.status(500).send('Server error');
+  }
+};
+
+exports.doctorList = async (req, res, next) => {
+  try {
+    const doctorList = await Doctor.findAll();
+    return res.status(200).json({ doctorList });
   } catch (error) {
     return res.status(500).send('Server error');
   }

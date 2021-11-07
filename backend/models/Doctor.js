@@ -37,7 +37,7 @@ const Doctor = sequelize.define('Doctor', {
     type: DataTypes.STRING(10),
     defaultValue: 'doctor',
   },
-  admin_approved: {
+  verified: {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
