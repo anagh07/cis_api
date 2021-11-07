@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Header from '../SharedComponent/Header';
-import ManagerDashboard from '../ManagerComponent/ManagerDashboard';
+import AddDoctor from '../ManagerComponent/AddDoctor';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -9,15 +9,15 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function ManagerDashboardPage() {
+function AddDoctorPage() {
   const classes = useStyles();
 
   return (
     <div>
       <Header />
-      <ManagerDashboard />
+      <AddDoctor />
     </div>
   );
 }
 
-export default ManagerDashboardPage;
+export default AddDoctorPage;

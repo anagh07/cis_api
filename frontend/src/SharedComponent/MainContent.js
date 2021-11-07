@@ -6,8 +6,7 @@ import { Link } from "react-router-dom";
 const useStyles = makeStyles(theme => ({
   toolbar: theme.mixins.toolbar,
   title: {
-    flexGrow: 1,
-    // backgroundColor: theme.palette.background.default,
+    flexGrow: 1,  
     padding: theme.spacing(3),
   },
   content: {
