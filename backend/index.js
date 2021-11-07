@@ -1,5 +1,6 @@
 const { decodeBase64 } = require('bcryptjs');
 const express = require('express');
+const cors = require('cors');
 const app = express();
 require('dotenv').config();
 const db = require('./db/dbconnect');

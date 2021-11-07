@@ -54,9 +54,9 @@ class SignUpContent extends Component {
     })
   }
 
-  handleSubmit = (event) => {
+  handleSubmit = async (event) => {
     const authUrl = "";
-    const apiBaseUrl = "https://cis-6841.herokuapp.com/cis/auth/";
+    const apiBaseUrl = "https://cis-6841.herokuapp.com/auth/";
     // const apiBaseUrl = "http://localhost:5000/cis/auth/";
     const { role } = this.state;
     const request = {

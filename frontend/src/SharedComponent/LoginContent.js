@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Grid } from '@material-ui/core';
 import { StyleSheet, css } from 'aphrodite';
 import axios from 'axios';
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 export const styles = StyleSheet.create({
   root: {
@@ -38,7 +38,7 @@ export const styles = StyleSheet.create({
     ':hover': {
       cursor: 'pointer',
       backgroundColor: '#579e94',
-    }
+    },
   },
   linkTag: {
     color: '#55967e',
@@ -47,13 +47,13 @@ export const styles = StyleSheet.create({
     width: '100%',
     ':hover': {
       color: '#285943',
-      textDecoration: 'none'
-    }
+      textDecoration: 'none',
+    },
   },
   signupText: {
-    paddingBottom: '5px'
+    paddingBottom: '5px',
   },
-})
+});
 
 class LoginContent extends Component {
   constructor(props) {
@@ -61,37 +61,36 @@ class LoginContent extends Component {
     this.state = {
       email: '',
       password: '',
-    }
+    };
   }
 
   handleChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     this.setState({
-      [name]: value
-    })
-  }
+      [name]: value,
+    });
+  };
 
-  handleSubmit = (event) => {
-    // const apiBaseUrl = "http://localhost:5000/api/";
-    const apiBaseUrl = "https://cis-6841.herokuapp.com/cis/auth";
-    const request = {
+  handleSubmit = async (event) => {
+    event.preventDefault();
+    const apiBaseUrl = 'https://cis-6841.herokuapp.com/';
+    const body = JSON.stringify({
       email: this.state.email,
-      password :this.state.password,
-    }
-    axios.interceptors.response.use(null, (error) => {
-      return Promise.reject(error);
+      password: this.state.password,
     });
-    const headers = {
-      'Content-Type': 'application/json',
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    try {
+      const res = await axios.post(apiBaseUrl + 'auth', body, config);
+      console.log(res.data.token); // token that has to be sent as header to each subsequent request for this user
+    } catch (err) {
+      console.log(err);
     }
-    axios.post(apiBaseUrl, request, {
-      headers: headers
-    }).then(function (response) {
-      console.log("Hello");
-    }).catch(function (error) {
-      console.log(error);
-    });
-  }
+  };
 
   render() {
     const { email, password } = this.state;
@@ -100,29 +99,36 @@ class LoginContent extends Component {
         <Grid item xs></Grid>
         <Grid item xs={4} className={css(styles.root)}>
           <h3 className={css(styles.heading)}>LOGIN</h3>
-          <hr/><br/>
+          <hr />
+          <br />
           <form>
             <label>Email Address:</label>
-            <input name='email'
-                onChange={this.handleChange}
-                type='text'
-                value={email}
-                className={css(styles.inputStyle)}
+            <input
+              name='email'
+              onChange={this.handleChange}
+              type='text'
+              value={email}
+              className={css(styles.inputStyle)}
             />
-            <br/>
+            <br />
             <label>Password:</label>
-            <input name='password'
-                onChange={this.handleChange}
-                type='password'
-                value={password}
-                className={css(styles.inputStyle)}
+            <input
+              name='password'
+              onChange={this.handleChange}
+              type='password'
+              value={password}
+              className={css(styles.inputStyle)}
             />
-            <br/>
-            <button className={css(styles.loginButton)} onClick={this.handleSubmit}>LOGIN</button>
-            <br/>
+            <br />
+            <button className={css(styles.loginButton)} onClick={this.handleSubmit}>
+              LOGIN
+            </button>
+            <br />
             <div className={css(styles.signupText)}>
               Don't have an account?
-              <Link className={css(styles.linkTag)} to='/signup'>Sign up</Link>
+              <Link className={css(styles.linkTag)} to='/signup'>
+                Sign up
+              </Link>
             </div>
           </form>
         </Grid>
@@ -132,4 +138,4 @@ class LoginContent extends Component {
   }
 }
 
-export default LoginContent
+export default LoginContent;
