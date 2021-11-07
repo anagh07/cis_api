@@ -1,5 +1,7 @@
 const Patient = require('../models/Patient');
 const Manager = require('../models/Manager');
+const Nurse = require('../models/Nurse');
+const Doctor = require('../models/Doctor');
 const SelfAssessment = require('../models/SelfAssessment');
 const sequelize = require('./dbconnect').sequelize;
 

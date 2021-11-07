@@ -26,4 +26,38 @@ router.post(
 // @access  protected
 router.get('/', isAuthManager, managerController.getManagerProfile);
 
+// @route   POST /manager/nurse
+// @desc    Register new nurse
+// @access  protected: manager
+router.post(
+  '/nurse',
+  isAuthManager,
+  [
+    body('first_name', 'Invalid/empty first name').trim().notEmpty(),
+    body('last_name', 'Invalid/empty last name').trim().notEmpty(),
+    body('email', 'Invalid/empty email').trim().isEmail(),
+    body('dob', 'Invalid/empty dob').trim().notEmpty(),
+    body('password', 'Invalid/empty password').trim().isLength({ min: 6 }),
+    body('registration_number', 'Invalid/empty registration_number').trim().notEmpty(),
+  ],
+  managerController.registerNurse
+);
+
+// @route   DELETE /manager/nurse
+// @desc    Register new nurse
+// @access  protected: manager
+router.delete(
+  '/nurse',
+  isAuthManager,
+  [
+    body('email', 'Invalid/empty email').trim().isEmail(),
+  ],
+  managerController.removeNurse
+);
+
+// @route   GET /manager/nurselist
+// @desc    Retrieve list of all nurses
+// @access  protected: manager
+router.get('/nurselist', isAuthManager, managerController.nurseList);
+
 module.exports = router;
