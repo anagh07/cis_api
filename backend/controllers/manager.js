@@ -145,7 +145,20 @@ exports.removeNurse = async (req, res, next) => {
 
 exports.nurseList = async (req, res, next) => {
   try {
-    const nurseList = await Nurse.findAll();
+    const nurseDbList = await Nurse.findAll();
+    const nurseList = nurseDbList.map((nurse) => {
+      return {
+        id: nurse.id,
+        first_name: nurse.first_name,
+        last_name: nurse.last_name,
+        dob: nurse.dob,
+        email: nurse.email,
+        address: nurse.address,
+        phone: nurse.phone,
+        registration_number: nurse.registration_number,
+        verified: nurse.verified,
+      };
+    });
     return res.status(200).json({ nurseList });
   } catch (error) {
     return res.status(500).send('Server error');
@@ -228,7 +241,20 @@ exports.removeDoctor = async (req, res, next) => {
 
 exports.doctorList = async (req, res, next) => {
   try {
-    const doctorList = await Doctor.findAll();
+    const doctorDbList = await Doctor.findAll();
+    const doctorList = doctorDbList.map((doctor) => {
+      return {
+        id: doctor.id,
+        first_name: doctor.first_name,
+        last_name: doctor.last_name,
+        dob: doctor.dob,
+        email: doctor.email,
+        address: doctor.address,
+        phone: doctor.phone,
+        registration_number: doctor.registration_number,
+        verified: doctor.verified,
+      };
+    });
     return res.status(200).json({ doctorList });
   } catch (error) {
     return res.status(500).send('Server error');
