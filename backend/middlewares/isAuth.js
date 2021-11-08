@@ -48,17 +48,15 @@ exports.isAuthAll = async (req, res, next) => {
   }
   // Verify token
   try {
-    const verifiedToken = jwt.verify(token, process.env.JWT_SECRET);
-    if (
-      verifiedToken.patient.auth != 'patient' &&
-      verifiedToken.manager.auth != 'manager'
-    )
+    const verifiedToken = await jwt.verify(token, process.env.JWT_SECRET);
+    if (!verifiedToken)
       return res.status(401).json({ errors: [{ msg: 'Unauthorized' }] });
 
-    if (verifiedToken.patient.auth == 'patient') req.user = verifiedToken.patient;
-    if (verifiedToken.manager.auth == 'manager') req.user = verifiedToken.manager;
+    if (verifiedToken.patient) req.user = verifiedToken.patient;
+    if (verifiedToken.manager) req.user = verifiedToken.manager;
     next();
   } catch (err) {
+    console.log(err);
     return res.status(401).json({ errors: [{ msg: 'Invalid token' }] });
   }
 };

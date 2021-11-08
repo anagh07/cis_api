@@ -3,8 +3,9 @@ import { Grid, Button } from '@material-ui/core';
 import { StyleSheet, css } from 'aphrodite';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router';
 
-import { login } from '../actions/auth';
+import { login, loadUser } from '../actions/auth';
 
 export const styles = StyleSheet.create({
   root: {
@@ -79,7 +80,15 @@ const LoginContent = (props) => {
 
   if (props.isAuthenticated) {
     // redirect to dashboard
-    console.log(props.user);
+    // console.log(props.user);
+    props.loadUser();
+    if (props.user.auth === 'patient') {
+      // redirect to patient dashboard
+      return <Redirect to='/patientdashboard' />;
+    } else if (props.user.auth === 'manager') {
+      // redirect to manager dashboard
+      return <Redirect to='/manager_dashboard' />;
+    }
   }
 
   return (
@@ -133,4 +142,4 @@ const mapStateToProps = (state) => ({
   user: state.auth.user,
 });
 
-export default connect(mapStateToProps, { login })(LoginContent);
+export default connect(mapStateToProps, { login, loadUser })(LoginContent);
