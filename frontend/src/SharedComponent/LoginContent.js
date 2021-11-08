@@ -1,8 +1,10 @@
-import React, { Component } from 'react';
-import { Grid } from '@material-ui/core';
+import React, { Component, useState } from 'react';
+import { Grid, Button } from '@material-ui/core';
 import { StyleSheet, css } from 'aphrodite';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+import { login } from '../actions/auth';
 
 export const styles = StyleSheet.create({
   root: {
@@ -55,87 +57,78 @@ export const styles = StyleSheet.create({
   },
 });
 
-class LoginContent extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      email: '',
-      password: '',
-    };
-  }
+const LoginContent = (props) => {
+  const [formData, setForm] = useState({
+    email: '',
+    password: '',
+  });
 
-  handleChange = (e) => {
-    const { name, value } = e.target;
-    this.setState({
-      [name]: value,
+  const { email, password } = formData;
+
+  const handleChange = (e) => {
+    setForm({
+      ...formData,
+      [e.target.name]: e.target.value,
     });
   };
 
-  handleSubmit = async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const apiBaseUrl = 'https://cis-6841.herokuapp.com/';
-    const body = JSON.stringify({
-      email: this.state.email,
-      password: this.state.password,
-    });
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-
-    try {
-      const res = await axios.post(apiBaseUrl + 'auth', body, config);
-      console.log(res.data.token); // token that has to be sent as header to each subsequent request for this user
-    } catch (err) {
-      console.log(err);
-    }
+    props.login(email, password);
   };
 
-  render() {
-    const { email, password } = this.state;
-    return (
-      <Grid container spacing={4}>
-        <Grid item xs></Grid>
-        <Grid item xs={4} className={css(styles.root)}>
-          <h3 className={css(styles.heading)}>LOGIN</h3>
-          <hr />
-          <br />
-          <form>
-            <label>Email Address:</label>
-            <input
-              name='email'
-              onChange={this.handleChange}
-              type='text'
-              value={email}
-              className={css(styles.inputStyle)}
-            />
-            <br />
-            <label>Password:</label>
-            <input
-              name='password'
-              onChange={this.handleChange}
-              type='password'
-              value={password}
-              className={css(styles.inputStyle)}
-            />
-            <br />
-            <button className={css(styles.loginButton)} onClick={this.handleSubmit}>
-              LOGIN
-            </button>
-            <br />
-            <div className={css(styles.signupText)}>
-              Don't have an account?
-              <Link className={css(styles.linkTag)} to='/signup'>
-                Sign up
-              </Link>
-            </div>
-          </form>
-        </Grid>
-        <Grid item xs></Grid>
-      </Grid>
-    );
+  if (props.isAuthenticated) {
+    // redirect to dashboard
   }
-}
 
-export default LoginContent;
+  return (
+    <Grid container spacing={4}>
+      <Grid item xs></Grid>
+      <Grid item xs={4} className={css(styles.root)}>
+        <h3 className={css(styles.heading)}>LOGIN</h3>
+        <hr />
+        <br />
+        <form onSubmit={(e) => handleSubmit(e)}>
+          <label>Email Address:</label>
+          <input
+            name='email'
+            onChange={(e) => {
+              handleChange(e);
+            }}
+            type='text'
+            value={email}
+            className={css(styles.inputStyle)}
+          />
+          <br />
+          <label>Password:</label>
+          <input
+            name='password'
+            onChange={(e) => {
+              handleChange(e);
+            }}
+            type='password'
+            value={password}
+            className={css(styles.inputStyle)}
+          />
+          <br />
+          <button className={css(styles.loginButton)}>LOGIN</button>
+          <br />
+          <div className={css(styles.signupText)}>
+            Don't have an account?
+            <Link className={css(styles.linkTag)} to='/signup'>
+              Sign up
+            </Link>
+          </div>
+        </form>
+      </Grid>
+      <Grid item xs></Grid>
+    </Grid>
+  );
+};
+
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+  loading: state.auth.loading,
+});
+
+export default connect(mapStateToProps, { login })(LoginContent);

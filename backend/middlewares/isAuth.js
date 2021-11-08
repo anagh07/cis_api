@@ -40,6 +40,29 @@ exports.isAuthManager = async (req, res, next) => {
   }
 };
 
+exports.isAuthAll = async (req, res, next) => {
+  const token = req.get('x-auth-token');
+  // Check if token present
+  if (!token) {
+    return res.status(401).json({ errors: [{ msg: 'Invalid token, not logged in' }] });
+  }
+  // Verify token
+  try {
+    const verifiedToken = jwt.verify(token, process.env.JWT_SECRET);
+    if (
+      verifiedToken.patient.auth != 'patient' &&
+      verifiedToken.manager.auth != 'manager'
+    )
+      return res.status(401).json({ errors: [{ msg: 'Unauthorized' }] });
+
+    if (verifiedToken.patient.auth == 'patient') req.user = verifiedToken.patient;
+    if (verifiedToken.patient.auth == 'manager') req.user = verifiedToken.manager;
+    next();
+  } catch (err) {
+    return res.status(401).json({ errors: [{ msg: 'Invalid token' }] });
+  }
+};
+
 exports.matchAdminKey = (req, res, next) => {
   const { admin_key } = req.body;
   if (admin_key != process.env.CIS_ADMIN_KEY)

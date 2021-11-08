@@ -92,3 +92,25 @@ const loginManager = async (req, res, next, manager) => {
     return res.status(500).send('Server error');
   }
 };
+
+exports.getUser = async (req, res, next) => {
+  const { user } = req;
+  let userProfile = null;
+  try {
+    // Get profile from db
+    if (user.auth == 'patient') {
+      userProfile = await Patient.findByPk(user.id);
+    } else if (user.auth == 'manager') {
+      userProfile = await Manager.findByPk(user.id);
+    }
+    if (!userProfile)
+      return res.status(400).json({ errors: [{ msg: 'Profile not found' }] });
+    const { id, first_name, last_name, email, dob, address, phone, auth } = userProfile;
+    return res
+      .status(200)
+      .json({ id, first_name, last_name, email, dob, address, phone, auth });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send('Server error');
+  }
+};

@@ -1,6 +1,7 @@
 const express = require('express');
 const { body } = require('express-validator');
 const authController = require('../controllers/auth');
+const isAuthAll = require('../middlewares/isAuth').isAuthAll;
 
 const router = express.Router();
 
@@ -15,5 +16,10 @@ router.post(
   ],
   authController.login
 );
+
+// @route   GET /auth
+// @desc    Get patient, manager, nurse, doctor profile
+// @access  protected
+router.get('/', isAuthAll, authController.getUser);
 
 module.exports = router;
