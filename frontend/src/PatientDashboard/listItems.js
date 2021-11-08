@@ -33,13 +33,12 @@ export const mainListItems = (
       </ListItemIcon>
       <ListItemText primary='Appointment' />
     </ListItem>
-    <ListItem button onClick={(e) => handleClick(e)}>
+    <ListItem>
       <ListItemIcon>
         <AssignmentIcon />
       </ListItemIcon>
-      <ListItemText primary='Self-Assessment' />
-    </ListItem>
-    <Link to='/selfassessment'>Self Assessment</Link>
+      <Link to='/selfassessment' style={{ textDecoration: 'none' }}>Self Assessment</Link>
+    </ListItem>    
   </div>
 );
 

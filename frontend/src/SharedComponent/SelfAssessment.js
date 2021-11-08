@@ -84,9 +84,11 @@ class SelfAssessment extends Component {
       .then(function (response) {
         // TODO - Check response from the backend
         console.log(response);
+        window.alert("Self-assessment form was submitted sucessfully!")
       })
       .catch(function (error) {
         console.log(error);
+        window.alert("unable to submit form");
       });
   };
 

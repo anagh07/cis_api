@@ -7,6 +7,7 @@ import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
@@ -120,6 +121,9 @@ function DashboardContent() {
             >
               Patient Dashboard
             </Typography>
+            <Button variant="contained" sx={{backgroundColor : '#1ea694'}}>
+              <Link href="/" color="inherit" underline="none">Home</Link>              
+            </Button>
             <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">
                 <NotificationsIcon />
