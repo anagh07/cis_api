@@ -30,22 +30,43 @@ export const loadUser = () => async (dispath) => {
 
 // Register user
 export const register =
-  ({ name, email, password }) =>
+  ({ first_name, last_name, dob, email, password, phone, address, role }) =>
   async (dispatch) => {
     const config = {
       headers: {
         'Content-Type': 'application/json',
       },
     };
-
-    const body = JSON.stringify({ name, email, password });
+    console.log(role);
+    let body = null;
+    if (role == 'manager') {
+      body = JSON.stringify({
+        first_name,
+        last_name,
+        email,
+        password,
+        admin_key: 'tintinadmin',
+      });
+      console.log(body);
+    } else {
+      body = JSON.stringify({
+        first_name,
+        last_name,
+        dob,
+        email,
+        password,
+        address,
+        phone,
+      });
+    }
 
     try {
       const res = await axios.post(
-        'https://bug-task-tracker.herokuapp.com/api/users',
+        'https://cis-6841.herokuapp.com/' + role,
         body,
         config
       );
+      console.log(res);
 
       dispatch({
         type: REGISTER_SUCCESS,
@@ -56,10 +77,10 @@ export const register =
       dispatch(loadUser());
     } catch (err) {
       // Get errors array sent by api
-      const errors = err.response.data.errors;
-      if (errors) {
-        errors.forEach((error) => console.log(error));
-      }
+      //   const errors = err.response.data.errors;
+      //   if (errors) {
+      //     errors.forEach((error) => console.log(error));
+      //   }
 
       dispatch({
         type: REGISTER_FAIL,

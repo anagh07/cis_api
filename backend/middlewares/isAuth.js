@@ -63,6 +63,7 @@ exports.isAuthAll = async (req, res, next) => {
 
 exports.matchAdminKey = (req, res, next) => {
   const { admin_key } = req.body;
+  console.log(admin_key);
   if (admin_key != process.env.CIS_ADMIN_KEY)
     return res.status(401).json({ errors: [{ msg: 'Unauthorized' }] });
   next();
