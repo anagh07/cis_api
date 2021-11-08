@@ -91,6 +91,10 @@ const LoginContent = (props) => {
     }
   }
 
+  // if (props.isAuthenticated === true) {
+  //   return <Redirect to='/patientdashboard' />;
+  // }
+
   return (
     <Grid container spacing={4}>
       <Grid item xs></Grid>

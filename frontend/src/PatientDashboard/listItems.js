@@ -10,7 +10,14 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import HelpIcon from '@mui/icons-material/HelpCenter';
-import selfAssessIcon from './assess-icon.svg' ;
+import { StyleSheet, css } from 'aphrodite';
+import selfAssessIcon from './assess-icon.svg';
+import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router';
+
+const handleClick = (e) => {
+  return <Redirect to='/selfassessment' />;
+};
 
 export const mainListItems = (
   <div>
@@ -18,20 +25,21 @@ export const mainListItems = (
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
-      <ListItemText primary="Dashboard" />
+      <ListItemText primary='Dashboard' />
     </ListItem>
     <ListItem button>
       <ListItemIcon>
         <AssignmentIcon />
       </ListItemIcon>
-      <ListItemText primary="Appointment" />
+      <ListItemText primary='Appointment' />
     </ListItem>
-    <ListItem button>
+    <ListItem button onClick={(e) => handleClick(e)}>
       <ListItemIcon>
-      <AssignmentIcon />
+        <AssignmentIcon />
       </ListItemIcon>
-      <ListItemText primary="Self-Assessment" />
-    </ListItem>    
+      <ListItemText primary='Self-Assessment' />
+    </ListItem>
+    <Link to='/selfassessment'>Self Assessment</Link>
   </div>
 );
 
@@ -42,7 +50,7 @@ export const secondaryListItems = (
       <ListItemIcon>
         <HelpIcon />
       </ListItemIcon>
-      <ListItemText primary="Help" />
-    </ListItem>    
+      <ListItemText primary='Help' />
+    </ListItem>
   </div>
 );
