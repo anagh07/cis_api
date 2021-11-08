@@ -79,6 +79,7 @@ const LoginContent = (props) => {
 
   if (props.isAuthenticated) {
     // redirect to dashboard
+    console.log(props.user);
   }
 
   return (
@@ -129,6 +130,7 @@ const LoginContent = (props) => {
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
   loading: state.auth.loading,
+  user: state.auth.user,
 });
 
 export default connect(mapStateToProps, { login })(LoginContent);

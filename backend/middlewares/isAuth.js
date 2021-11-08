@@ -56,7 +56,7 @@ exports.isAuthAll = async (req, res, next) => {
       return res.status(401).json({ errors: [{ msg: 'Unauthorized' }] });
 
     if (verifiedToken.patient.auth == 'patient') req.user = verifiedToken.patient;
-    if (verifiedToken.patient.auth == 'manager') req.user = verifiedToken.manager;
+    if (verifiedToken.manager.auth == 'manager') req.user = verifiedToken.manager;
     next();
   } catch (err) {
     return res.status(401).json({ errors: [{ msg: 'Invalid token' }] });
