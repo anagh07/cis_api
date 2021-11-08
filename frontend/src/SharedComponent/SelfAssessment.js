@@ -61,33 +61,40 @@ class SelfAssessment extends Component {
   };
 
   handleSubmit = (event) => {
-    const apiBaseUrl = 'https://cis-6841.herokuapp.com/patient/selfassessment';
-    const request = {
-      a1: this.state.q1 == 'yes' ? true : false,
-      a2: this.state.q2 == 'yes' ? true : false,
-      a3: this.state.q3 == 'yes' ? true : false,
-      a4: this.state.q4 == 'yes' ? true : false,
-    };
-    axios.interceptors.response.use(null, (error) => {
-      return Promise.reject(error);
-    });
-    const token = this.props.token;
-    const headers = {
-      'Content-Type': 'application/json',
-      'x-auth-token': token,
-    };
-    // console.log(request);
-    axios
-      .post(apiBaseUrl, request, {
-        headers: headers,
-      })
-      .then(function (response) {
-        // TODO - Check response from the backend
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
+    if(this.state.q1 == "" || this.state.q2 == "" || this.state.q3 == "" || this.state.q4 == ""){
+      window.alert("Please answer all questions before submitting the form!")
+    }
+    else{
+      const apiBaseUrl = 'https://cis-6841.herokuapp.com/patient/selfassessment';
+      const request = {
+        a1: this.state.q1 == 'yes' ? true : false,
+        a2: this.state.q2 == 'yes' ? true : false,
+        a3: this.state.q3 == 'yes' ? true : false,
+        a4: this.state.q4 == 'yes' ? true : false,
+      };
+      axios.interceptors.response.use(null, (error) => {
+        return Promise.reject(error);
       });
+      const token = this.props.token;
+      const headers = {
+        'Content-Type': 'application/json',
+        'x-auth-token': token,
+      };
+      // console.log(request);
+      axios
+        .post(apiBaseUrl, request, {
+          headers: headers,
+        })
+        .then(function (response) {
+          // TODO - Check response from the backend
+          console.log(response);
+          window.alert("Self-assessment form was submitted sucessfully!")
+        })
+        .catch(function (error) {
+          console.log(error);
+          window.alert("unable to submit form");
+        });
+    }
   };
 
   render() {
