@@ -48,6 +48,7 @@ class SelfAssessment extends Component {
       q2: '',
       q3: '',
       q4: '',
+      showMessage: false
     };
   }
 
@@ -88,7 +89,8 @@ class SelfAssessment extends Component {
         .then(function (response) {
           // TODO - Check response from the backend
           console.log(response);
-          window.alert("Self-assessment form was submitted sucessfully!")
+          window.alert("Self-assessment form was submitted sucessfully!");
+          this.state.showMessage = true;
         })
         .catch(function (error) {
           console.log(error);
@@ -98,7 +100,7 @@ class SelfAssessment extends Component {
   };
 
   render() {
-    const { q1, q2, q3, q4 } = this.state;
+    const { q1, q2, q3, q4, showMessage } = this.state;
     if (!this.props.isAuthenticated) {
       console.log(this.props.isAuthenticated);
       return <Redirect to='/login' />;
@@ -231,19 +233,24 @@ class SelfAssessment extends Component {
                   <ToggleButton value='no'>No</ToggleButton>
                 </ToggleButtonGroup>
               </div>
-
-              <Button
-                onClick={this.handleSubmit}
-                variant='contained'
+              <div style = {{ padding: 'theme.spacing(3)', margin: '0 auto',}}>
+                <Button
+                  onClick={this.handleSubmit}
+                  variant='contained'
+                  style={{
+                    backgroundColor: '#1ea694',
+                  }}
+                >
+                  Submit
+                </Button>
+                <Button component={Link} to="/patientdashboard" variant="contained"
                 style={{
-                  width: '20%',
-                  margin: '0 auto',
-                  display: 'flex',
-                  backgroundColor: '#1ea694',
-                }}
-              >
-                Submit
-              </Button>
+                    backgroundColor: '#1ea694',
+                    marginLeft: '15px'                   
+                  }}>
+                Go back to patient dashboard
+                </Button>           
+              </div>
             </FormControl>
           </div>
         </Paper>
