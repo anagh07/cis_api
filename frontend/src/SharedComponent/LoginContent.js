@@ -3,6 +3,7 @@ import { Grid } from '@material-ui/core';
 import { StyleSheet, css } from 'aphrodite';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { userActions } from '../actions';
 
 export const styles = StyleSheet.create({
   root: {
@@ -71,25 +72,33 @@ class LoginContent extends Component {
     });
   };
 
-  handleSubmit = async (event) => {
+  // Email: messi@gmail.com
+  // Password: messi1234
+  handleSubmit = (event) => {
     event.preventDefault();
-    const apiBaseUrl = 'https://cis-6841.herokuapp.com/';
-    const body = JSON.stringify({
-      email: this.state.email,
-      password: this.state.password,
-    });
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
 
-    try {
-      const res = await axios.post(apiBaseUrl + 'auth', body, config);
-      console.log(res.data.token); // token that has to be sent as header to each subsequent request for this user
-    } catch (err) {
-      console.log(err);
+    const { email, password } = this.state;
+    const { dispatch } = this.props;
+    if (email && password) {
+      dispatch(userActions.login(email, password));
     }
+    // const apiBaseUrl = 'https://cis-6841.herokuapp.com/';
+    // const body = JSON.stringify({
+    //   email: this.state.email,
+    //   password: this.state.password,
+    // });
+    // const config = {
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    // };
+    //
+    // try {
+    //   const res = await axios.post(apiBaseUrl + 'auth', body, config);
+    //   console.log(res.data.token); // token that has to be sent as header to each subsequent request for this user
+    // } catch (err) {
+    //   console.log(err);
+    // }
   };
 
   render() {
