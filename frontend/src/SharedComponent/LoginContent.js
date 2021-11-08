@@ -78,10 +78,10 @@ const LoginContent = (props) => {
     props.login(email, password);
   };
 
-  if (props.isAuthenticated) {
+  if (props.isAuthenticated != false && props.user != null) {
     // redirect to dashboard
-    // console.log(props.user);
-    props.loadUser();
+    // props.loadUser();
+    console.log(props.user);
     if (props.user.auth === 'patient') {
       // redirect to patient dashboard
       return <Redirect to='/patientdashboard' />;

@@ -17,7 +17,6 @@ export const loadUser = () => async (dispath) => {
 
   try {
     const res = await axios.get('https://cis-6841.herokuapp.com/auth');
-    console.log(res.data);
     dispath({
       type: USER_LOADED,
       payload: res.data,
@@ -79,9 +78,7 @@ export const login = (email, password) => async (dispatch) => {
   const body = JSON.stringify({ email, password });
 
   try {
-    console.log(body);
     const res = await axios.post('https://cis-6841.herokuapp.com/auth', body, config);
-    console.log(res.data);
 
     dispatch({
       type: LOGIN_SUCCESS,
@@ -89,7 +86,7 @@ export const login = (email, password) => async (dispatch) => {
     });
 
     // Load user
-    // dispatch(loadUser());
+    dispatch(loadUser());
   } catch (err) {
     // Get errors array sent by api
     // const errors = err.response.data.errors;
