@@ -16,7 +16,7 @@ router.post(
     body('first_name', 'Invalid first name').trim().notEmpty(),
     body('last_name', 'Invalid last name').trim().notEmpty(),
     body('email', 'Invalid email').trim().notEmpty().isEmail(),
-    body('password', 'Invalid password').trim().isLength({ min: 10 }),
+    body('password', 'Invalid password').trim().isLength({ min: 6 }),
   ],
   managerController.registerManager
 );
