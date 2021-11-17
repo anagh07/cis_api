@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 
 import { register, loadUser } from '../actions/auth';
 
+
 export const styles = StyleSheet.create({
   root: {
     border: '1px solid #edf4f9',
@@ -34,7 +35,7 @@ export const styles = StyleSheet.create({
   },
   signupText: {
     paddingBottom: '5px',
-  },
+  },  
 });
 
 const SignUpContent = (props) => {
@@ -115,7 +116,8 @@ const SignUpContent = (props) => {
         <hr />
         <br />
         <form onSubmit={(e) => handleSubmit(e)}>
-          <label>First Name:</label>
+          
+          <label class="required">First Name </label>
           <input
             name='first_name'
             onChange={(e) => {
@@ -126,7 +128,7 @@ const SignUpContent = (props) => {
             className='Input-style'
           />
           <br />
-          <label>Last Name:</label>
+          <label class="required">Last Name </label>
           <input
             name='last_name'
             onChange={(e) => {
@@ -137,7 +139,7 @@ const SignUpContent = (props) => {
             className='Input-style'
           />
           <br />
-          <label>Date of Birth:</label>
+          <label class="required">Date of Birth </label>
           <input
             name='dob'
             onChange={(e) => {
@@ -149,7 +151,7 @@ const SignUpContent = (props) => {
           />
           <br />
           <br />
-          <label>Address:</label>
+          <label class="required">Address </label>
           <input
             name='address'
             onChange={(e) => {
@@ -161,7 +163,7 @@ const SignUpContent = (props) => {
           />
           <br />
           <br />
-          <label>phone:</label>
+          <label class="required">phone </label>
           <input
             name='phone'
             onChange={(e) => {
@@ -172,7 +174,7 @@ const SignUpContent = (props) => {
             className='Input-style'
           />
           <br />
-          <label>Email Address:</label>
+          <label class="required">Email Address </label>
           <input
             name='email'
             onChange={(e) => {
@@ -183,7 +185,7 @@ const SignUpContent = (props) => {
             className='Input-style'
           />
           <br />
-          <label>Role:</label>
+          <label class="required">Role </label>
           <br />
           <select
             name='role'
@@ -202,7 +204,7 @@ const SignUpContent = (props) => {
             <option value='nurse'>Nurse</option>
           </select>
           <br />
-          <label>Password:</label>
+          <label class="required">Password </label>
           <input
             name='password'
             onChange={(e) => {
@@ -213,7 +215,7 @@ const SignUpContent = (props) => {
             className='Input-style'
           />
           <br />
-          <label>Re-type Password:</label>
+          <label class="required">Re-type Password </label>
           <input
             name='retypePassword'
             onChange={(e) => {
