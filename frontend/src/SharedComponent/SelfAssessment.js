@@ -90,7 +90,6 @@ class SelfAssessment extends Component {
           // TODO - Check response from the backend
           console.log(response);
           window.alert("Self-assessment form was submitted sucessfully!");
-          this.state.showMessage = true;
         })
         .catch(function (error) {
           console.log(error);
@@ -113,7 +112,7 @@ class SelfAssessment extends Component {
         <Paper style={{ margin: '100px' }}>
           <div className={css(styles.content)}>
             <div className={css(styles.title)}>
-              <Typography variant='h4'>SelfAssessment </Typography>
+              <Typography variant='h4'>Self-Assessment </Typography>
             </div>
             <FormControl style={{ width: '100%' }}>
               <div className={css(styles.questions)}>
@@ -246,7 +245,7 @@ class SelfAssessment extends Component {
                 <Button component={Link} to="/patientdashboard" variant="contained"
                 style={{
                     backgroundColor: '#1ea694',
-                    marginLeft: '15px'                   
+                    marginLeft: '10 px'                   
                   }}>
                 Go back to patient dashboard
                 </Button>           
