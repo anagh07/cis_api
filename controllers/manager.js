@@ -5,15 +5,12 @@ const Manager = require('../models/Manager');
 const Nurse = require('../models/Nurse');
 const Doctor = require('../models/Doctor');
 const Patient = require('../models/Patient');
+const resWithValidationError = require('../utils/resValidationError');
+const resValidationError = require('../utils/resValidationError');
 
 exports.registerManager = async (req, res, next) => {
   // Check if input data has errors
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({
-      errors: errors.array(),
-    });
-  }
+  resWithValidationError(req, res, next);
 
   // Check if it already exist
   const { first_name, last_name, email, password } = req.body;
@@ -72,12 +69,7 @@ exports.getManagerProfile = async (req, res, next) => {
 
 exports.registerNurse = async (req, res, next) => {
   // Check if input data has errors
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({
-      errors: errors.array(),
-    });
-  }
+  resValidationError(req, res, next);
 
   // Check if it already exist
   const {
@@ -168,12 +160,7 @@ exports.nurseList = async (req, res, next) => {
 
 exports.registerDoctor = async (req, res, next) => {
   // Check if input data has errors
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({
-      errors: errors.array(),
-    });
-  }
+  resValidationError(req, res, next);
 
   // Check if it already exist
   const {
@@ -264,12 +251,7 @@ exports.doctorList = async (req, res, next) => {
 
 exports.registerPatient = async (req, res, next) => {
   // Check if input data has errors
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({
-      errors: errors.array(),
-    });
-  }
+  resValidationError(req, res, next);
 
   // Check if it already exist
   const { first_name, last_name, email, password, dob, address, phone } = req.body;
@@ -341,6 +323,24 @@ exports.patientList = async (req, res, next) => {
     });
     return res.status(200).json({ patientList });
   } catch (error) {
+    console.log(error);
+    return res.status(500).send('Server error');
+  }
+};
+
+exports.approveNurse = async (req, res, next) => {
+  resValidationError(req, res, next);
+
+  try {
+    const { nurseId } = req.body;
+    const nurse = await Nurse.findByPk(nurseId);
+    if (!nurse) return res.status(400).json({ errors: [{ msg: 'Nurse not found' }] });
+    await nurse.update({ verified: true });
+    await nurse.save();
+    const updatedNurse = await Nurse.findByPk(nurseId);
+    return res.status(200).json({ msg: 'Nurse approved', nurse: updatedNurse });
+  } catch (error) {
+    console.log(error);
     return res.status(500).send('Server error');
   }
 };

@@ -43,6 +43,16 @@ router.post(
   managerController.registerNurse
 );
 
+// @route   PUT /manager/approvenurse
+// @desc    Register new nurse
+// @access  protected: manager
+router.post(
+  '/approvenurse',
+  isAuthManager,
+  [body('nurseId', 'Nurse id invalid/missing').trim().notEmpty()],
+  managerController.approveNurse
+);
+
 // @route   DELETE /manager/nurse
 // @desc    Remove a nurse
 // @access  protected: manager
