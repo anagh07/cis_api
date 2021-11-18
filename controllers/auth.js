@@ -3,6 +3,7 @@ const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const Patient = require('../models/Patient');
 const Manager = require('../models/Manager');
+const Nurse = require('../models/Nurse');
 
 exports.login = async (req, res, next) => {
   // Check if input data has errors
@@ -28,6 +29,8 @@ exports.login = async (req, res, next) => {
     if (manager) {
       return loginManager(req, res, next, manager);
     }
+    const nurse = await Nurse.findOne({ where: { email } });
+    if (nurse) return loginNurse(req, res, next, nurse);
     // Implement login for nurse and doctor
     // If none then send error
     return res.status(400).json({ errors: [{ msg: 'User does not exist' }] });
@@ -65,8 +68,40 @@ const loginPatient = async (req, res, next, patient) => {
   }
 };
 
+const loginNurse = async (req, res, next, nurse) => {
+  const { password } = req.body;
+
+  // Check if nurse has been approved by admin
+  if (!nurse.verified)
+    return res.status(403).json({ errors: [{ msg: 'Admin verification pending' }] });
+
+  try {
+    // Match password
+    const passwordMatch = await bcrypt.compare(password, nurse.password);
+    if (!passwordMatch) {
+      return res.status(400).json({ errors: [{ msg: 'Invalid credentials' }] });
+    }
+    // Return jwt
+    const token = await jwt.sign(
+      {
+        nurse: {
+          id: nurse.id,
+          email: nurse.email,
+          auth: 'nurse',
+        },
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: 36000 }
+    );
+    return res.status(200).json({ token });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send('Server error');
+  }
+};
+
 const loginManager = async (req, res, next, manager) => {
-  const { email, password } = req.body;
+  const { password } = req.body;
 
   try {
     // Match password

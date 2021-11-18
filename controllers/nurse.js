@@ -23,7 +23,7 @@ exports.registerNurse = async (req, res, next) => {
       return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
 
     // Password encryption
-    const salt = await bcrypt.gensalt(12);
+    const salt = await bcrypt.genSalt(12);
     const hashedPassowrd = await bcrypt.hash(password, salt);
 
     // Save nurse to db
@@ -63,8 +63,17 @@ exports.getNurseProfile = async (req, res, next) => {
     const nurseProfile = await Nurse.findByPk(nurse.id);
     if (!nurseProfile)
       return res.status(400).json({ errors: [{ msg: 'Profile not found' }] });
-    const { id, first_name, last_name, email, dob, address, phone, registration_number } =
-      nurseProfile;
+    const {
+      id,
+      first_name,
+      last_name,
+      email,
+      dob,
+      address,
+      phone,
+      registration_number,
+      verified,
+    } = nurseProfile;
     return res.status(200).json({
       id,
       first_name,
@@ -74,6 +83,7 @@ exports.getNurseProfile = async (req, res, next) => {
       address,
       dob,
       registration_number,
+      verified,
     });
   } catch (error) {
     console.log(error);
