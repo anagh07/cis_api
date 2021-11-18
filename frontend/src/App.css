@@ -73,3 +73,8 @@
 .Alert-message {
   color: #ff0000;
 }
+
+.required:after{
+  content:" *";
+  color: #ff0000;
+}

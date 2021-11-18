@@ -21,6 +21,21 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import { mainListItems, secondaryListItems } from './listItems';
 import Appointments from './Appointments';
 import Information from './Information';
+import { StyleSheet, css } from 'aphrodite';
+import { MenuItem } from '@material-ui/core';
+
+const styles = StyleSheet.create({
+  appBar: {
+    backgroundColor: "#1ea694",
+  },
+  menuItem: {
+    marginLeft: "10px",
+  },
+  menuLink: {
+    color: "white",
+    textDecoration: "none",
+  }
+});
 
 function Copyright(props) {
   return (
@@ -83,6 +98,11 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 const mdTheme = createTheme();
 
+const handleLogout = (event) => {
+  localStorage.clear();
+  window.location.href = '/';
+}
+
 function DashboardContent() {
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
@@ -121,9 +141,9 @@ function DashboardContent() {
             >
               Patient Dashboard
             </Typography>
-            <Button variant="contained" sx={{backgroundColor : '#1ea694'}}>
-              <Link href="/" color="inherit" underline="none">Home</Link>              
-            </Button>
+            <MenuItem style={{ marginLeft: "auto", marginRight: -12 }}>
+              <Link to="/" className={css(styles.menuLink)} onClick={handleLogout}>Logout</Link>
+            </MenuItem>
             <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">
                 <NotificationsIcon />
