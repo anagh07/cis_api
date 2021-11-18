@@ -137,7 +137,7 @@ exports.getUser = async (req, res, next) => {
       userProfile = await Patient.findByPk(user.id);
     } else if (user.auth == 'manager') {
       userProfile = await Manager.findByPk(user.id);
-    } else if (use.auth == 'nurse') {
+    } else if (user.auth == 'nurse') {
       userProfile = await Nurse.findByPk(user.id);
     } else {
       userProfile = await Doctor.findByPk(user.id);
