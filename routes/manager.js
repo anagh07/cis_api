@@ -46,7 +46,7 @@ router.post(
 // @route   PUT /manager/approvenurse
 // @desc    Register new nurse
 // @access  protected: manager
-router.post(
+router.put(
   '/approvenurse',
   isAuthManager,
   [body('nurseId', 'Nurse id invalid/missing').trim().notEmpty()],

@@ -42,6 +42,10 @@ const Nurse = sequelize.define('Nurse', {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
+  rejected: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
 });
 
 module.exports = Nurse;

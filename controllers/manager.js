@@ -332,10 +332,11 @@ exports.approveNurse = async (req, res, next) => {
   resValidationError(req, res, next);
 
   try {
-    const { nurseId } = req.body;
+    const { nurseId, approval } = req.body;
     const nurse = await Nurse.findByPk(nurseId);
     if (!nurse) return res.status(400).json({ errors: [{ msg: 'Nurse not found' }] });
-    await nurse.update({ verified: true });
+    if (approval) await nurse.update({ verified: true, rejected: false });
+    else await nurse.update({ verified: false, rejected: true });
     await nurse.save();
     const updatedNurse = await Nurse.findByPk(nurseId);
     return res.status(200).json({ msg: 'Nurse approved', nurse: updatedNurse });
