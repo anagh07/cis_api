@@ -137,13 +137,35 @@ exports.getUser = async (req, res, next) => {
       userProfile = await Patient.findByPk(user.id);
     } else if (user.auth == 'manager') {
       userProfile = await Manager.findByPk(user.id);
+    } else if (use.auth == 'nurse') {
+      userProfile = await Nurse.findByPk(user.id);
+    } else {
+      userProfile = await Doctor.findByPk(user.id);
     }
     if (!userProfile)
       return res.status(400).json({ errors: [{ msg: 'Profile not found' }] });
-    const { id, first_name, last_name, email, dob, address, phone, auth } = userProfile;
-    return res
-      .status(200)
-      .json({ id, first_name, last_name, email, dob, address, phone, auth });
+    const {
+      id,
+      first_name,
+      last_name,
+      email,
+      dob,
+      address,
+      phone,
+      auth,
+      registration_number,
+    } = userProfile;
+    return res.status(200).json({
+      id,
+      first_name,
+      last_name,
+      email,
+      dob,
+      address,
+      phone,
+      auth,
+      registration_number,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).send('Server error');
