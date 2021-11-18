@@ -77,3 +77,23 @@ exports.getPatientProfile = async (req, res, next) => {
     return res.status(500).send('Server error');
   }
 };
+
+exports.patientList = async (req, res, next) => {
+  try {
+    const patientDbList = await Patient.findAll();
+    const patientList = patientDbList.map((patient) => {
+      return {
+        id: patient.id,
+        first_name: patient.first_name,
+        last_name: patient.last_name,
+        dob: patient.dob,
+        email: patient.email,
+        address: patient.address,
+        phone: patient.phone,
+      };
+    });
+    return res.status(200).json({ patientList });
+  } catch (error) {
+    return res.status(500).send('Server error');
+  }
+};
