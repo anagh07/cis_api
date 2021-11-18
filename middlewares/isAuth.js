@@ -22,6 +22,27 @@ exports.isAuthPatient = async (req, res, next) => {
   }
 };
 
+exports.isAuthNurse = async (req, res, next) => {
+  const token = req.get('x-auth-token');
+  // Check if token present
+  if (!token) {
+    return res.status(401).json({ errors: [{ msg: 'Invalid token, not logged in' }] });
+  }
+  // Verify token
+  try {
+    const verifiedToken = jwt.verify(token, process.env.JWT_SECRET);
+    if (
+      verifiedToken.patient.auth != 'nurse' &&
+      verifiedToken.manager.auth != 'manager'
+    )
+      return res.status(401).json({ errors: [{ msg: 'Unauthorized' }] });
+    req.nurse = verifiedToken.nurse;
+    next();
+  } catch (err) {
+    return res.status(401).json({ errors: [{ msg: 'Invalid token' }] });
+  }
+};
+
 exports.isAuthManager = async (req, res, next) => {
   const token = req.get('x-auth-token');
   // Check if token present
@@ -54,6 +75,7 @@ exports.isAuthAll = async (req, res, next) => {
 
     if (verifiedToken.patient) req.user = verifiedToken.patient;
     if (verifiedToken.manager) req.user = verifiedToken.manager;
+    if (verifiedToken.nurse) req.user = verifiedToken.nurse;
     next();
   } catch (err) {
     console.log(err);

@@ -23,6 +23,7 @@ app.get('/', (req, res, next) => {
 // Routes
 app.use('/patient', require('./routes/patient'));
 app.use('/manager', require('./routes/manager'));
+app.use('/nurse', require('./routes/nurse'));
 app.use('/auth', require('./routes/auth'));
 
 // Connect DB and Initialize server

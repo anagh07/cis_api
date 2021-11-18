@@ -1,16 +1,11 @@
 const bcrypt = require('bcryptjs');
-const { validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 const Patient = require('../models/Patient');
+const resValidationError = require('../utils/resValidationError');
 
 exports.registerPatient = async (req, res, next) => {
   // Check if input data has errors
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({
-      errors: errors.array(),
-    });
-  }
+  resValidationError(req, res, next);
 
   // Check if patient already exists
   const { first_name, last_name, email, dob, address, phone } = req.body;
