@@ -38,6 +38,32 @@ const SelfAssessment = sequelize.define(
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    q5: {
+      type: DataTypes.STRING(),
+      defaultValue:
+        'Have you been in close contact with a confirmed or probable case of COVID-19?',
+    },
+    a5: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+    },
+    q6: {
+      type: DataTypes.STRING(),
+      defaultValue: 'Have you been tested for COVID-19?',
+    },
+    a6: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+    },
+    q7: {
+      type: DataTypes.STRING(),
+      defaultValue:
+        'Have you or someone close to you travelled outside of Canada within the last 14 days?',
+    },
+    a7: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+    },
   },
   {
     // Other model options go here
