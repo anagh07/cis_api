@@ -31,10 +31,7 @@ exports.isAuthNurse = async (req, res, next) => {
   // Verify token
   try {
     const verifiedToken = jwt.verify(token, process.env.JWT_SECRET);
-    if (
-      verifiedToken.patient.auth != 'nurse' &&
-      verifiedToken.manager.auth != 'manager'
-    )
+    if (verifiedToken.nurse.auth != 'nurse' && verifiedToken.manager.auth != 'manager')
       return res.status(401).json({ errors: [{ msg: 'Unauthorized' }] });
     req.nurse = verifiedToken.nurse;
     next();
