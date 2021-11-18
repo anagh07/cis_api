@@ -10,14 +10,13 @@ const dbsync = async () => {
   SelfAssessment.belongsTo(Patient);
 
   // Create table if not already created
-  (async () => {
-    try {
-      console.log('### Syncing');
-      await sequelize.sync();
-    } catch (error) {
-      console.log(error);
-      return res.status(500).send('Server error');
-    }
+  await (async () => {
+      try {
+          console.log('### Syncing');
+          await sequelize.sync();
+      } catch (error) {
+          return console.log(error);
+      }
   })();
 };
 
