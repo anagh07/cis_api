@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const resValidationError = require('../utils/resValidationError');
 const Nurse = require('../models/Nurse');
+const Appointment = require('../models/Appointment');
 
 exports.registerNurse = async (req, res, next) => {
   resValidationError(req, res, next);
@@ -18,9 +19,9 @@ exports.registerNurse = async (req, res, next) => {
     password,
   } = req.body;
   try {
-    const existingNurse = await Nurse.findOne({ where: { email } });
+    const existingNurse = await Nurse.findOne({where: {email}});
     if (existingNurse)
-      return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
+      return res.status(400).json({errors: [{msg: 'User already exists'}]});
 
     // Password encryption
     const salt = await bcrypt.genSalt(12);
@@ -48,9 +49,9 @@ exports.registerNurse = async (req, res, next) => {
         },
       },
       process.env.JWT_SECRET,
-      { expiresIn: 3600 }
+      {expiresIn: 3600}
     );
-    return res.status(200).json({ token });
+    return res.status(200).json({token});
   } catch (error) {
     console.log(error);
     return res.status(500).send('Server error');
@@ -58,11 +59,11 @@ exports.registerNurse = async (req, res, next) => {
 };
 
 exports.getNurseProfile = async (req, res, next) => {
-  const { nurse } = req;
+  const {nurse} = req;
   try {
     const nurseProfile = await Nurse.findByPk(nurse.id);
     if (!nurseProfile)
-      return res.status(400).json({ errors: [{ msg: 'Profile not found' }] });
+      return res.status(400).json({errors: [{msg: 'Profile not found'}]});
     const {
       id,
       first_name,
@@ -90,3 +91,28 @@ exports.getNurseProfile = async (req, res, next) => {
     return res.status(500).send('Server error');
   }
 };
+
+exports.createAppointment = async (req, res, next) => {
+  resValidationError(req, res, next);
+  const {nurse} = req;
+  const {datetime, location, note, patientId} = req.body;
+  try {
+    const appointment = await Appointment.create({datetime, location, note, patientId, nurseId: nurse.id});
+    return res.status(200).json({appointment});
+  } catch (e) {
+    console.log(e);
+    return res.status(500).send('Server error');
+  }
+}
+exports.getAppointmentsList = async (req, res, next) => {
+  resValidationError(req, res, next);
+  const {nurse} = req;
+  try {
+    let appointmentsList = await Appointment.findAll({where: {nurseId: nurse.id}});
+    if (!appointmentsList) appointmentsList = [];
+    return res.status(200).json({appointmentsList});
+  } catch (e) {
+    console.log(e);
+    return res.status(500).send('Server error');
+  }
+}
