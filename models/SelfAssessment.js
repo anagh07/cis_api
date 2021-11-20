@@ -1,4 +1,4 @@
-const { DataTypes } = require('sequelize');
+const {DataTypes} = require('sequelize');
 const sequelize = require('../db/dbconnect').sequelize;
 
 const SelfAssessment = sequelize.define(
@@ -64,6 +64,18 @@ const SelfAssessment = sequelize.define(
       type: DataTypes.BOOLEAN,
       allowNull: true,
     },
+    nurseReviewed: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    nurseComment: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    rejected: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    }
   },
   {
     // Other model options go here

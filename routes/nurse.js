@@ -46,13 +46,41 @@ router.post(
   nurseController.createAppointment
 );
 
-// @route   GET /nurse/appointments
+// @route   GET /nurse/appointmentslist
 // @desc    Get list of appointments for current nurse
 // @access  protected
 router.get(
   '/appointmentslist',
   isAuthNurse,
   nurseController.getAppointmentsList
+);
+
+// @route   GET /nurse/sawpatients
+// @desc    Get list of self assessments and patients pending review
+// @access  protected
+router.get(
+  '/sawpatients',
+  isAuthNurse,
+  nurseController.getPendingSelfAssessmentsWithPatients
+);
+
+// @route   GET /nurse/pendingsa
+// @desc    Get list of pending self assessments
+// @access  protected
+router.get(
+  '/pendingsa',
+  isAuthNurse,
+  nurseController.getPendingSelfAssessments
+);
+
+// @route   POST /nurse/patientsfromidlist
+// @desc    Get list of pending self assessments
+// @access  protected
+router.post(
+  '/patientsfromidlist',
+  isAuthNurse,
+  body('patientIds', 'Provide list of patient ids').notEmpty(),
+  nurseController.getPatientsFromIdList
 );
 
 module.exports = router;
