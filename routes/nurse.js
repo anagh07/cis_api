@@ -83,4 +83,14 @@ router.post(
   nurseController.getPatientsFromIdList
 );
 
+// @route   POST /nurse/rejectpatient
+// @desc    Reject a self assessment test taken by a patient
+// @access  protected
+router.post(
+  '/rejectpatient',
+  isAuthNurse,
+  body('selfAssessmentId', 'Self assessment id not provided').notEmpty(),
+  nurseController.rejectPatient
+);
+
 module.exports = router;

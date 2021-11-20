@@ -151,12 +151,28 @@ exports.getPendingSelfAssessments = async (req, res, next) => {
 }
 
 exports.getPatientsFromIdList = async (req, res, next) => {
+  resValidationError(req, res, next);
   const {patientIds} = req.body;
   try {
     const patients = await Promise.all(patientIds.map(async patientid => {
       return await Patient.findAll({attributes: {exclude: ['password']}, where: {id: patientid}});
     }))
     res.status(200).json({patients});
+  } catch (e) {
+    console.log(e)
+    return res.status(500).send({errors: [{msg: 'Server error'}]});
+  }
+}
+
+exports.rejectPatient = async (req, res, next) => {
+  resValidationError(req, res, next);
+  const {selfAssessmentId} = req.body;
+  try {
+    const selfAssessment = await SelfAssessment.findByPk(selfAssessmentId);
+    if (!selfAssessment) return res.status(400).json({errors: [{msg: 'Self assessment not found'}]});
+    await selfAssessment.update({rejected: true, nurseReviewed: true});
+    await selfAssessment.save();
+    return res.status(200).json({msg: 'Successfully rejected'})
   } catch (e) {
     console.log(e)
     return res.status(500).send({errors: [{msg: 'Server error'}]});
