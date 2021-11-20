@@ -122,7 +122,7 @@ router.post(
 router.delete(
   '/patient',
   isAuthManager,
-  [body('email', 'Invalid/empty email').trim().isEmail()],
+  body('email', 'Invalid/empty email').trim().isEmail(),
   managerController.removePatient
 );
 
