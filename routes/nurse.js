@@ -49,7 +49,7 @@ router.post(
 // @route   GET /nurse/appointments
 // @desc    Get list of appointments for current nurse
 // @access  protected
-router.post(
+router.get(
   '/appointmentslist',
   isAuthNurse,
   nurseController.getAppointmentsList
