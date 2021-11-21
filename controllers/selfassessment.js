@@ -1,6 +1,7 @@
 const { validationResult } = require('express-validator');
 const SelfAssessment = require('../models/SelfAssessment');
 const Patient = require('../models/Patient');
+const Comment = require('../models/Comment');
 
 exports.submitSelfAssessment = async (req, res, next) => {
   // Check if input data has errors
@@ -37,6 +38,18 @@ exports.getSelfAssessments = async (req, res, next) => {
     if (!patient) return res.status(400).json({ errors: [{ msg: 'Invalid token' }] });
     const selfAssessments = await patient.getSelfAssessments();
     return res.status(200).json({ selfAssessments });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send('Server error');
+  }
+};
+
+exports.getSaComments = async (req, res, next) => {
+  const saId = req.params.id;
+  try {
+    const sa = await SelfAssessment.findByPk(saId);
+    const comments = await Comment.findAll({ where: { selfAssessmentId: sa.id } });
+    return res.status(200).json({ comments });
   } catch (error) {
     console.log(error);
     return res.status(500).send('Server error');
