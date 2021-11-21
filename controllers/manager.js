@@ -1,4 +1,4 @@
-const {validationResult} = require('express-validator');
+const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Manager = require('../models/Manager');
@@ -13,11 +13,11 @@ exports.registerManager = async (req, res, next) => {
   resWithValidationError(req, res, next);
 
   // Check if it already exist
-  const {first_name, last_name, email, password} = req.body;
+  const { first_name, last_name, email, password } = req.body;
   try {
-    const existingManager = await Manager.findOne({where: {email: email}});
+    const existingManager = await Manager.findOne({ where: { email: email } });
     if (existingManager)
-      return res.status(400).json({errors: [{msg: 'User already exists'}]});
+      return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
 
     // Encrypt password with bcrypt
     const salt = await bcrypt.genSalt(12);
@@ -43,9 +43,9 @@ exports.registerManager = async (req, res, next) => {
         },
       },
       process.env.JWT_SECRET,
-      {expiresIn: 3600}
+      { expiresIn: 3600 }
     );
-    return res.status(200).json({token});
+    return res.status(200).json({ token });
   } catch (error) {
     console.log(error);
     return res.status(500).send('Server error');
@@ -53,14 +53,14 @@ exports.registerManager = async (req, res, next) => {
 };
 
 exports.getManagerProfile = async (req, res, next) => {
-  const {manager} = req;
+  const { manager } = req;
   try {
     // Get profile from db
     const managerProfile = await Manager.findByPk(manager.id);
     if (!managerProfile)
-      return res.status(400).json({errors: [{msg: 'Profile not found'}]});
-    const {id, first_name, last_name, email} = managerProfile;
-    return res.status(200).json({id, first_name, last_name, email});
+      return res.status(400).json({ errors: [{ msg: 'Profile not found' }] });
+    const { id, first_name, last_name, email } = managerProfile;
+    return res.status(200).json({ id, first_name, last_name, email });
   } catch (error) {
     console.log(error);
     return res.status(500).send('Server error');
@@ -83,9 +83,9 @@ exports.registerNurse = async (req, res, next) => {
     registration_number,
   } = req.body;
   try {
-    const existingNurse = await Nurse.findOne({where: {email: email}});
+    const existingNurse = await Nurse.findOne({ where: { email: email } });
     if (existingNurse)
-      return res.status(400).json({errors: [{msg: 'User already exists'}]});
+      return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
 
     // Encrypt password with bcrypt
     const salt = await bcrypt.genSalt(12);
@@ -116,9 +116,9 @@ exports.registerNurse = async (req, res, next) => {
         },
       },
       process.env.JWT_SECRET,
-      {expiresIn: 3600}
+      { expiresIn: 3600 }
     );
-    return res.status(200).json({token});
+    return res.status(200).json({ token });
   } catch (error) {
     console.log(error);
     return res.status(500).send('Server error');
@@ -126,14 +126,14 @@ exports.registerNurse = async (req, res, next) => {
 };
 
 exports.removeNurse = async (req, res, next) => {
-  const {email} = req.body;
+  const { email } = req.body;
   try {
-    const nurse = await Nurse.findOne({where: {email}});
-    if (!nurse) return res.status(404).json({errors: [{msg: 'Nurse not found'}]})
+    const nurse = await Nurse.findOne({ where: { email } });
+    if (!nurse) return res.status(404).json({ errors: [{ msg: 'Nurse not found' }] });
     await nurse.destroy();
-    return res.status(200).json({msg: 'Deleted successfully'});
+    return res.status(200).json({ msg: 'Deleted successfully' });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return res.status(500).send('Server error');
   }
 };
@@ -152,9 +152,10 @@ exports.nurseList = async (req, res, next) => {
         phone: nurse.phone,
         registration_number: nurse.registration_number,
         verified: nurse.verified,
+        rejected: nurse.rejected,
       };
     });
-    return res.status(200).json({nurseList});
+    return res.status(200).json({ nurseList });
   } catch (error) {
     return res.status(500).send('Server error');
   }
@@ -176,9 +177,9 @@ exports.registerDoctor = async (req, res, next) => {
     registration_number,
   } = req.body;
   try {
-    const existingDoctor = await Doctor.findOne({where: {email: email}});
+    const existingDoctor = await Doctor.findOne({ where: { email: email } });
     if (existingDoctor)
-      return res.status(400).json({errors: [{msg: 'User already exists'}]});
+      return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
 
     // Encrypt password with bcrypt
     const salt = await bcrypt.genSalt(12);
@@ -209,9 +210,9 @@ exports.registerDoctor = async (req, res, next) => {
         },
       },
       process.env.JWT_SECRET,
-      {expiresIn: 3600}
+      { expiresIn: 3600 }
     );
-    return res.status(200).json({token});
+    return res.status(200).json({ token });
   } catch (error) {
     console.log(error);
     return res.status(500).send('Server error');
@@ -219,11 +220,11 @@ exports.registerDoctor = async (req, res, next) => {
 };
 
 exports.removeDoctor = async (req, res, next) => {
-  const {email} = req.body;
+  const { email } = req.body;
   try {
-    const doctor = await Doctor.findOne({where: {email}});
+    const doctor = await Doctor.findOne({ where: { email } });
     await doctor.destroy();
-    return res.status(200).json({msg: 'Deleted successfully'});
+    return res.status(200).json({ msg: 'Deleted successfully' });
   } catch (error) {
     return res.status(500).send('Server error');
   }
@@ -243,9 +244,10 @@ exports.doctorList = async (req, res, next) => {
         phone: doctor.phone,
         registration_number: doctor.registration_number,
         verified: doctor.verified,
+        rejected: doctor.rejected,
       };
     });
-    return res.status(200).json({doctorList});
+    return res.status(200).json({ doctorList });
   } catch (error) {
     return res.status(500).send('Server error');
   }
@@ -256,11 +258,11 @@ exports.registerPatient = async (req, res, next) => {
   resValidationError(req, res, next);
 
   // Check if it already exist
-  const {first_name, last_name, email, password, dob, address, phone} = req.body;
+  const { first_name, last_name, email, password, dob, address, phone } = req.body;
   try {
-    const existingPatient = await Patient.findOne({where: {email: email}});
+    const existingPatient = await Patient.findOne({ where: { email: email } });
     if (existingPatient)
-      return res.status(400).json({errors: [{msg: 'User already exists'}]});
+      return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
 
     // Encrypt password with bcrypt
     const salt = await bcrypt.genSalt(12);
@@ -289,9 +291,9 @@ exports.registerPatient = async (req, res, next) => {
         },
       },
       process.env.JWT_SECRET,
-      {expiresIn: 3600}
+      { expiresIn: 3600 }
     );
-    return res.status(200).json({token});
+    return res.status(200).json({ token });
   } catch (error) {
     console.log(error);
     return res.status(500).send('Server error');
@@ -299,11 +301,11 @@ exports.registerPatient = async (req, res, next) => {
 };
 
 exports.removePatient = async (req, res, next) => {
-  const {email} = req.body;
+  const { email } = req.body;
   try {
-    const patient = await Patient.findOne({where: {email}});
+    const patient = await Patient.findOne({ where: { email } });
     await patient.destroy();
-    return res.status(200).json({msg: 'Deleted successfully'});
+    return res.status(200).json({ msg: 'Deleted successfully' });
   } catch (error) {
     return res.status(500).send('Server error');
   }
@@ -323,7 +325,7 @@ exports.patientList = async (req, res, next) => {
         phone: patient.phone,
       };
     });
-    return res.status(200).json({patientList});
+    return res.status(200).json({ patientList });
   } catch (error) {
     console.log(error);
     return res.status(500).send('Server error');
@@ -334,14 +336,14 @@ exports.approveNurse = async (req, res, next) => {
   resValidationError(req, res, next);
 
   try {
-    const {nurseId, approval} = req.body;
+    const { nurseId, approval } = req.body;
     const nurse = await Nurse.findByPk(nurseId);
-    if (!nurse) return res.status(400).json({errors: [{msg: 'Nurse not found'}]});
-    if (approval) await nurse.update({verified: true, rejected: false});
-    else await nurse.update({verified: false, rejected: true});
+    if (!nurse) return res.status(400).json({ errors: [{ msg: 'Nurse not found' }] });
+    if (approval) await nurse.update({ verified: true, rejected: false });
+    else await nurse.update({ verified: false, rejected: true });
     await nurse.save();
     const updatedNurse = await Nurse.findByPk(nurseId);
-    return res.status(200).json({msg: 'Nurse approved', nurse: updatedNurse});
+    return res.status(200).json({ msg: 'Nurse approved', nurse: updatedNurse });
   } catch (error) {
     console.log(error);
     return res.status(500).send('Server error');
