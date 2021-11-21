@@ -48,4 +48,19 @@ router.post(
 // @access  protected
 router.get('/selfassessment', isAuthPatient, selfAssessmentController.getSelfAssessments);
 
+// @route   GET /patient/appointments
+// @desc    Retrieve patient appointments
+// @access  protected
+router.get('/appointments', isAuthPatient, patientController.getAppointments);
+
+// @route   DELETE /patient/deleteappointment
+// @desc    Retrieve patient appointments
+// @access  protected
+router.delete(
+  '/deleteappointment',
+  isAuthPatient,
+  body('appointmentId', 'AppointmentId not provided').notEmpty(),
+  patientController.deleteAppointment
+);
+
 module.exports = router;

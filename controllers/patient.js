@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const Appointment = require('../models/Appointment');
 const Patient = require('../models/Patient');
 const resValidationError = require('../utils/resValidationError');
 
@@ -94,6 +95,30 @@ exports.patientList = async (req, res, next) => {
     });
     return res.status(200).json({ patientList });
   } catch (error) {
-    return res.status(500).send('Server error');
+    console.log(error);
+    return res.status(500).json({ errors: [{ msg: 'Server error' }] });
+  }
+};
+
+exports.getAppointments = async (req, res, next) => {
+  const { patient } = req;
+  try {
+    const appointments = await Appointment.findAll({ where: { patientId: patient.id } });
+    return res.status(200).json({ appointments });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ errors: [{ msg: 'Server error' }] });
+  }
+};
+
+exports.deleteAppointment = async (req, res, next) => {
+  const { appointmentId } = req.body;
+  try {
+    const appointment = await Appointment.findByPk(appointmentId);
+    await appointment.destroy();
+    res.status(200).json({ msg: 'Successfully deleted' });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ errors: [{ msg: 'Server error' }] });
   }
 };

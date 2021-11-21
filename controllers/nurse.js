@@ -4,8 +4,9 @@ const resValidationError = require('../utils/resValidationError');
 const Nurse = require('../models/Nurse');
 const Patient = require('../models/Patient');
 const Appointment = require('../models/Appointment');
-const SelfAssessment = require('../models/SelfAssessment')
-const {getPendingSelfAssessments} = require("./nurse");
+const SelfAssessment = require('../models/SelfAssessment');
+const Comment = require('../models/Comment');
+const { getPendingSelfAssessments } = require('./nurse');
 exports.registerNurse = async (req, res, next) => {
   resValidationError(req, res, next);
 
@@ -21,9 +22,9 @@ exports.registerNurse = async (req, res, next) => {
     password,
   } = req.body;
   try {
-    const existingNurse = await Nurse.findOne({where: {email}});
+    const existingNurse = await Nurse.findOne({ where: { email } });
     if (existingNurse)
-      return res.status(400).json({errors: [{msg: 'User already exists'}]});
+      return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
 
     // Password encryption
     const salt = await bcrypt.genSalt(12);
@@ -51,9 +52,9 @@ exports.registerNurse = async (req, res, next) => {
         },
       },
       process.env.JWT_SECRET,
-      {expiresIn: 3600}
+      { expiresIn: 3600 }
     );
-    return res.status(200).json({token});
+    return res.status(200).json({ token });
   } catch (error) {
     console.log(error);
     return res.status(500).send('Server error');
@@ -61,11 +62,11 @@ exports.registerNurse = async (req, res, next) => {
 };
 
 exports.getNurseProfile = async (req, res, next) => {
-  const {nurse} = req;
+  const { nurse } = req;
   try {
     const nurseProfile = await Nurse.findByPk(nurse.id);
     if (!nurseProfile)
-      return res.status(400).json({errors: [{msg: 'Profile not found'}]});
+      return res.status(400).json({ errors: [{ msg: 'Profile not found' }] });
     const {
       id,
       first_name,
@@ -96,85 +97,115 @@ exports.getNurseProfile = async (req, res, next) => {
 
 exports.createAppointment = async (req, res, next) => {
   resValidationError(req, res, next);
-  const {nurse} = req;
-  const {datetime, location, note, patientId} = req.body;
+  const { nurse } = req;
+  const { datetime, location, note, patientId } = req.body;
   try {
-    const appointment = await Appointment.create({datetime, location, note, patientId, nurseId: nurse.id});
-    return res.status(200).json({appointment});
+    const appointment = await Appointment.create({
+      datetime,
+      location,
+      note,
+      patientId,
+      nurseId: nurse.id,
+    });
+    return res.status(200).json({ appointment });
   } catch (e) {
     console.log(e);
     return res.status(500).send('Server error');
   }
-}
+};
 exports.getAppointmentsList = async (req, res, next) => {
-  const {nurse} = req;
+  const { nurse } = req;
   try {
-    let appointmentsList = await Appointment.findAll({where: {nurseId: nurse.id}});
+    let appointmentsList = await Appointment.findAll({ where: { nurseId: nurse.id } });
     if (!appointmentsList) appointmentsList = [];
-    return res.status(200).json({appointmentsList});
+    return res.status(200).json({ appointmentsList });
   } catch (e) {
     console.log(e);
     return res.status(500).send('Server error');
   }
-}
+};
 
 exports.getPendingSelfAssessmentsWithPatients = async (req, res, next) => {
   try {
-    const pendingSelfAssessments = await Promise.allSettled(await SelfAssessment.findAll({where: {nurseReviewed: false}}));
-    if (pendingSelfAssessments.length == 0) return res.status(200).json({pendingReview: pendingSelfAssessments});
+    const pendingSelfAssessments = await Promise.allSettled(
+      await SelfAssessment.findAll({ where: { nurseReviewed: false } })
+    );
+    if (pendingSelfAssessments.length == 0)
+      return res.status(200).json({ pendingReview: pendingSelfAssessments });
     const pendingPatients = await Promise.allSettled(
       pendingSelfAssessments.map(async (selfAssessment) => {
         return await Patient.findByPk(selfAssessment.value.PatientId);
       })
-    )
-    const pendingAssessmentsWithPatients = pendingSelfAssessments.map((assessment, index) => {
-      assessment.patient = pendingPatients[index];
-      console.log(assessment)
-      return assessment;
-    })
-    return res.status(200).json({pendingReview: pendingAssessmentsWithPatients});
+    );
+    const pendingAssessmentsWithPatients = pendingSelfAssessments.map(
+      (assessment, index) => {
+        assessment.patient = pendingPatients[index];
+        console.log(assessment);
+        return assessment;
+      }
+    );
+    return res.status(200).json({ pendingReview: pendingAssessmentsWithPatients });
   } catch (e) {
-    console.log(e)
-    return res.status(500).send({errors: [{msg: 'Server error'}]});
+    console.log(e);
+    return res.status(500).send({ errors: [{ msg: 'Server error' }] });
   }
-}
+};
 
 exports.getPendingSelfAssessments = async (req, res, next) => {
   try {
-    const pendingSa = await SelfAssessment.findAll({where: {nurseReviewed: false}});
-    if (!pendingSa) return res.status(200).json({pendingSelfAssessments: []});
-    return res.status(200).json({pendingSelfAssessments: pendingSa});
+    const pendingSa = await SelfAssessment.findAll({ where: { nurseReviewed: false } });
+    if (!pendingSa) return res.status(200).json({ pendingSelfAssessments: [] });
+    return res.status(200).json({ pendingSelfAssessments: pendingSa });
   } catch (e) {
-    console.log(e)
-    return res.status(500).send({errors: [{msg: 'Server error'}]});
+    console.log(e);
+    return res.status(500).send({ errors: [{ msg: 'Server error' }] });
   }
-}
+};
 
 exports.getPatientsFromIdList = async (req, res, next) => {
   resValidationError(req, res, next);
-  const {patientIds} = req.body;
+  const { patientIds } = req.body;
   try {
-    const patients = await Promise.all(patientIds.map(async patientid => {
-      return await Patient.findAll({attributes: {exclude: ['password']}, where: {id: patientid}});
-    }))
-    res.status(200).json({patients});
+    const patients = await Promise.all(
+      patientIds.map(async (patientid) => {
+        return await Patient.findAll({
+          attributes: { exclude: ['password'] },
+          where: { id: patientid },
+        });
+      })
+    );
+    res.status(200).json({ patients });
   } catch (e) {
-    console.log(e)
-    return res.status(500).send({errors: [{msg: 'Server error'}]});
+    console.log(e);
+    return res.status(500).send({ errors: [{ msg: 'Server error' }] });
   }
-}
+};
 
 exports.rejectPatient = async (req, res, next) => {
   resValidationError(req, res, next);
-  const {selfAssessmentId} = req.body;
+  const { selfAssessmentId } = req.body;
   try {
     const selfAssessment = await SelfAssessment.findByPk(selfAssessmentId);
-    if (!selfAssessment) return res.status(400).json({errors: [{msg: 'Self assessment not found'}]});
-    await selfAssessment.update({rejected: true, nurseReviewed: true});
+    if (!selfAssessment)
+      return res.status(400).json({ errors: [{ msg: 'Self assessment not found' }] });
+    await selfAssessment.update({ rejected: true, nurseReviewed: true });
     await selfAssessment.save();
-    return res.status(200).json({msg: 'Successfully rejected'})
+    return res.status(200).json({ msg: 'Successfully rejected' });
   } catch (e) {
-    console.log(e)
-    return res.status(500).send({errors: [{msg: 'Server error'}]});
+    console.log(e);
+    return res.status(500).send({ errors: [{ msg: 'Server error' }] });
   }
-}
+};
+
+exports.addComment = async (req, res, next) => {
+  resValidationError(req, res, next);
+  const { selfAssessmentId, text } = req.body;
+  const { nurse } = req;
+  try {
+    const comment = await Comment.create({ nurseId: nurse.id, selfAssessmentId, text });
+    return res.status(200).json({ comment });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ errors: [{ msg: 'Server error' }] });
+  }
+};
