@@ -189,7 +189,7 @@ exports.getPatientsFromIdList = async (req, res, next) => {
       })
     );
     const filteredPatients = patients.filter((patient) => patient !== null);
-    return res.status(200).json({ filteredPatients });
+    return res.status(200).json({ patients: filteredPatients });
   } catch (e) {
     console.log(e);
     return res.status(500).send({ errors: [{ msg: 'Server error' }] });
