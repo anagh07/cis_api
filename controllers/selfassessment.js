@@ -37,6 +37,9 @@ exports.getSelfAssessments = async (req, res, next) => {
     const patient = await Patient.findByPk(id);
     if (!patient) return res.status(400).json({ errors: [{ msg: 'Invalid token' }] });
     const selfAssessments = await patient.getSelfAssessments();
+    if (!selfAssessments) {
+      return res.status(200).json({ pendingSelfAssessments: [] });
+    }
     return res.status(200).json({ selfAssessments });
   } catch (error) {
     console.log(error);
