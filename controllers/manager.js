@@ -69,7 +69,12 @@ exports.getManagerProfile = async (req, res, next) => {
 
 exports.registerNurse = async (req, res, next) => {
   // Check if input data has errors
-  resValidationError(req, res, next);
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      errors: errors.array(),
+    });
+  }
 
   // Check if it already exist
   const {
@@ -163,7 +168,12 @@ exports.nurseList = async (req, res, next) => {
 
 exports.registerDoctor = async (req, res, next) => {
   // Check if input data has errors
-  resValidationError(req, res, next);
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      errors: errors.array(),
+    });
+  }
 
   // Check if it already exist
   const {
@@ -255,7 +265,12 @@ exports.doctorList = async (req, res, next) => {
 
 exports.registerPatient = async (req, res, next) => {
   // Check if input data has errors
-  resValidationError(req, res, next);
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      errors: errors.array(),
+    });
+  }
 
   // Check if it already exist
   const { first_name, last_name, email, password, dob, address, phone } = req.body;
@@ -333,7 +348,12 @@ exports.patientList = async (req, res, next) => {
 };
 
 exports.approveNurse = async (req, res, next) => {
-  resValidationError(req, res, next);
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      errors: errors.array(),
+    });
+  }
 
   try {
     const { nurseId, approval } = req.body;

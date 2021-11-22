@@ -6,7 +6,12 @@ const resValidationError = require('../utils/resValidationError');
 
 exports.registerPatient = async (req, res, next) => {
   // Check if input data has errors
-  resValidationError(req, res, next);
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      errors: errors.array(),
+    });
+  }
 
   // Check if patient already exists
   const { first_name, last_name, email, dob, address, phone } = req.body;
