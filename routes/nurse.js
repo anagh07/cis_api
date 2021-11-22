@@ -71,7 +71,7 @@ router.get('/pendingsa', isAuthNurse, nurseController.getPendingSelfAssessments)
 router.post(
   '/patientsfromidlist',
   isAuthNurse,
-  body('patientIds', 'Provide list of patient ids').notEmpty(),
+  body('patientIds', 'Provide list of patient ids').isArray(),
   nurseController.getPatientsFromIdList
 );
 
