@@ -168,10 +168,7 @@ exports.getPatientsFromIdList = async (req, res, next) => {
   try {
     const patients = await Promise.all(
       patientIds.map(async (patientid) => {
-        return await Patient.findOne({
-          attributes: { exclude: ['password'] },
-          where: { id: patientid },
-        });
+        return await Patient.findByPk(patientid);
       })
     );
     res.status(200).json({ patients });
