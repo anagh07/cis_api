@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Appointment = require('../models/Appointment');
 const Patient = require('../models/Patient');
-const resValidationError = require('../utils/resValidationError');
+const { validationResult } = require('express-validator');
 
 exports.registerPatient = async (req, res, next) => {
   // Check if input data has errors

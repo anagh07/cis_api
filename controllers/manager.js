@@ -5,12 +5,15 @@ const Manager = require('../models/Manager');
 const Nurse = require('../models/Nurse');
 const Doctor = require('../models/Doctor');
 const Patient = require('../models/Patient');
-const resWithValidationError = require('../utils/resValidationError');
-const resValidationError = require('../utils/resValidationError');
 
 exports.registerManager = async (req, res, next) => {
   // Check if input data has errors
-  resWithValidationError(req, res, next);
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      errors: errors.array(),
+    });
+  }
 
   // Check if it already exist
   const { first_name, last_name, email, password } = req.body;

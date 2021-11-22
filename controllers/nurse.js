@@ -1,13 +1,12 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const resValidationError = require('../utils/resValidationError');
 const { validationResult } = require('express-validator');
 const Nurse = require('../models/Nurse');
 const Patient = require('../models/Patient');
 const Appointment = require('../models/Appointment');
 const SelfAssessment = require('../models/SelfAssessment');
 const Comment = require('../models/Comment');
-const { getPendingSelfAssessments } = require('./nurse');
+
 exports.registerNurse = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
