@@ -8,6 +8,37 @@ const router = express.Router();
 // @route   POST /auth
 // @desc    Login as patient, manager, nurse, doctor
 // @access  public
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    loginCredentials:
+ *      properties:
+ *        email:
+ *          type: string
+ *          description: valid email
+ *        password:
+ *          type: string
+ *          description: password min 6 characters
+ *      required:
+ *        - email
+ *        - password
+ *      description: Valid login information as json
+ */
+/**
+ * @swagger
+ * /auth:
+ *  post:
+ *    description: Login to existing account
+ *    parameters:
+ *      - name: loginCredentials
+ *        in: body
+ *        required: true
+ *        type: object
+ *        description: login credentials as json
+ *        schema:
+ *          $ref: '#/components/schemas/loginCredentials'
+ */
 router.post(
   '/',
   [

@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 require('dotenv').config();
+const swaggerUi = require('swagger-ui-express');
+const swaggerDoc = require('./documentation/swaggerSetup');
 const db = require('./db/dbconnect');
 const dbsync = require('./db/dbsync');
 
@@ -14,6 +16,9 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Headers', '*');
   next();
 });
+
+// Documentation setup
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
 // Default route
 app.get('/', (req, res, next) => {
