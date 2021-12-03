@@ -8,25 +8,32 @@ const Comment = require('../models/Comment');
 const sequelize = require('./dbconnect').sequelize;
 
 const dbsync = async () => {
-  Patient.hasMany(SelfAssessment);
-  SelfAssessment.belongsTo(Patient);
+  Patient.hasMany(SelfAssessment, { onDelete: 'CASCADE' });
+  SelfAssessment.belongsTo(Patient, { onDelete: 'CASCADE' });
   // Appointment patient
-  Patient.hasMany(Appointment, { foreignKey: 'patientId' });
-  Appointment.belongsTo(Patient, { foreignKey: 'patientId' });
+  Patient.hasMany(Appointment, { foreignKey: 'patientId', onDelete: 'CASCADE' });
+  Appointment.belongsTo(Patient, { foreignKey: 'patientId', onDelete: 'CASCADE' });
   // Appointment nurse
-  Nurse.hasMany(Appointment, { foreignKey: 'nurseId' });
-  Appointment.belongsTo(Nurse, { foreignKey: 'nurseId' });
+  Nurse.hasMany(Appointment, { foreignKey: 'nurseId', onDelete: 'CASCADE' });
+  Appointment.belongsTo(Nurse, { foreignKey: 'nurseId', onDelete: 'CASCADE' });
   // Comment relations
-  SelfAssessment.hasMany(Comment, { foreignKey: 'selfAssessmentId' });
-  Comment.belongsTo(SelfAssessment, { foreignKey: 'selfAssessmentId' });
-  Nurse.hasMany(Comment, { foreignKey: 'nurseId' });
-  Comment.belongsTo(Nurse, { foreignKey: 'nurseId' });
+  SelfAssessment.hasMany(Comment, {
+    foreignKey: 'selfAssessmentId',
+    onDelete: 'CASCADE',
+  });
+  Comment.belongsTo(SelfAssessment, {
+    foreignKey: 'selfAssessmentId',
+    onDelete: 'CASCADE',
+  });
+  Nurse.hasMany(Comment, { foreignKey: 'nurseId', onDelete: 'CASCADE' });
+  Comment.belongsTo(Nurse, { foreignKey: 'nurseId', onDelete: 'CASCADE' });
 
   // Create table if not already created
   await (async () => {
     try {
       console.log('### Syncing');
       await sequelize.sync();
+      // await sequelize.drop();
     } catch (error) {
       return console.log(error);
     }
