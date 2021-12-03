@@ -109,9 +109,37 @@ exports.createAppointment = async (req, res, next) => {
   }
   const { nurse } = req;
   const { datetime, location, note, patientId } = req.body;
+
+  // Check if appointment exists at this time
+  const existingAppointments = await Appointment.findAll();
+  let flag = false;
+  existingAppointments.every((existingAppointment) => {
+    if (
+      nurse.id === existingAppointment.nurseId ||
+      patientId === existingAppointment.patientId
+    ) {
+      let preferredTime = new Date(datetime);
+      let existingTime = new Date(existingAppointment.datetime);
+      let difference = Math.abs(
+        parseInt(preferredTime.getTime()) - parseInt(existingTime.getTime())
+      );
+      if (difference < 900000) {
+        flag = true;
+        return false;
+      }
+    }
+    return true;
+  });
+  if (flag) {
+    return res
+      .status(400)
+      .json({ errors: [{ msg: 'Failed to create appointment: time conflict' }] });
+  }
+
+  const datetimeJS = new Date(datetime);
   try {
     const appointment = await Appointment.create({
-      datetime,
+      datetime: datetimeJS.toUTCString(),
       location,
       note,
       patientId,
@@ -123,6 +151,7 @@ exports.createAppointment = async (req, res, next) => {
     return res.status(500).send('Server error');
   }
 };
+
 exports.getAppointmentsList = async (req, res, next) => {
   const { nurse } = req;
   try {
