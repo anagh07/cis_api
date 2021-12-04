@@ -153,3 +153,17 @@ exports.acceptRejectAppointment = async (req, res, next) => {
     return res.status(500).json({ errors: [{ msg: 'Server error' }] });
   }
 };
+
+// @route   GET /doctor/doctorlist
+// @desc    Get list of doctors
+exports.doctorList = async (req, res, next) => {
+  try {
+    const doctorList = await Doctor.findAll({ attributes: { exclude: ['password'] } });
+    if (!doctorList)
+      return res.status(400).json({ errors: [{ msg: 'Profile not found' }] });
+    res.status(200).json(doctorList);
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ errors: [{ msg: 'Server error' }] });
+  }
+};

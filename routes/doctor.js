@@ -1,6 +1,6 @@
 const express = require('express');
 const { body, query } = require('express-validator');
-const { isAuthDoctor } = require('../middlewares/isAuth');
+const { isAuthDoctor, isAuthAll } = require('../middlewares/isAuth');
 const doctorController = require('../controllers/doctor');
 const patientController = require('../controllers/patient');
 const nurseController = require('../controllers/nurse');
@@ -63,5 +63,10 @@ router.put(
   query('accepted', 'missing query param accepted=true/false').notEmpty(),
   doctorController.acceptRejectAppointment
 );
+
+// @route   GET /doctor/doctorlist
+// @desc    Get list of doctors
+// @access  protected
+router.get('/doctorlist', isAuthAll, doctorController.doctorList);
 
 module.exports = router;
