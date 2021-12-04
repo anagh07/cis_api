@@ -27,7 +27,7 @@ exports.submitSelfAssessment = async (req, res, next) => {
     return res.status(200).json(selfAssessment);
   } catch (error) {
     console.log(error);
-    return res.status(500).send('Server error');
+    return res.status(500).json({ errors: [{ msg: 'Server error' }] });
   }
 };
 
@@ -43,7 +43,7 @@ exports.getSelfAssessments = async (req, res, next) => {
     return res.status(200).json({ selfAssessments });
   } catch (error) {
     console.log(error);
-    return res.status(500).send('Server error');
+    return res.status(500).json({ errors: [{ msg: 'Server error' }] });
   }
 };
 
@@ -55,6 +55,20 @@ exports.getSaComments = async (req, res, next) => {
     return res.status(200).json({ comments });
   } catch (error) {
     console.log(error);
-    return res.status(500).send('Server error');
+    return res.status(500).json({ errors: [{ msg: 'Server error' }] });
+  }
+};
+
+// @route   GET /sa/:id
+// @desc    Retrieve self assessment
+exports.getSelfAssessmentById = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const sa = await SelfAssessment.findByPk(id);
+    if (!sa) return res.status(400).json({ errors: [{ msg: 'Invalid token' }] });
+    return res.status(200).json({ sa });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ errors: [{ msg: 'Server error' }] });
   }
 };

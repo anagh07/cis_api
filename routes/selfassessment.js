@@ -9,4 +9,9 @@ const router = express.Router();
 // @access  protected
 router.get('/comments/:id', isAuthAll, saController.getSaComments);
 
+// @route   GET /sa/:id
+// @desc    Retrieve self assessment
+// @access  protected
+router.get('/:id', isAuthAll, saController.getSelfAssessmentById);
+
 module.exports = router;
