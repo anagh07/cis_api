@@ -372,3 +372,19 @@ exports.approveNurse = async (req, res, next) => {
     return res.status(500).send('Server error');
   }
 };
+
+exports.approveDoctor = async (req, res, next) => {
+  try {
+    const { doctorId, approval } = req.body;
+    const doctor = await Doctor.findByPk(doctorId);
+    if (!doctor) return res.status(400).json({ errors: [{ msg: 'doctor not found' }] });
+    if (approval) await doctor.update({ verified: true, rejected: false });
+    else await doctor.update({ verified: false, rejected: true });
+    await doctor.save();
+    const updatedDoctor = await Doctor.findByPk(doctorId);
+    return res.status(200).json({ msg: 'Doctor approved', Doctor: updatedDoctor });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send('Server error');
+  }
+};

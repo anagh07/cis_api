@@ -16,6 +16,12 @@ const dbsync = async () => {
   // Appointment nurse
   Nurse.hasMany(Appointment, { foreignKey: 'nurseId', onDelete: 'CASCADE' });
   Appointment.belongsTo(Nurse, { foreignKey: 'nurseId', onDelete: 'CASCADE' });
+  // Appointment doctor
+  Doctor.hasMany(Appointment, { foreignKey: 'doctorId', onDelete: 'CASCADE' });
+  Appointment.belongsTo(Doctor, { foreignKey: 'doctorId', onDelete: 'CASCADE' });
+  // Appointment SA
+  SelfAssessment.hasOne(Appointment, { foreignKey: 'saId' });
+  Appointment.belongsTo(SelfAssessment, { foreignKey: 'saId' });
   // Comment relations
   SelfAssessment.hasMany(Comment, {
     foreignKey: 'selfAssessmentId',

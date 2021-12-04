@@ -44,13 +44,23 @@ router.post(
 );
 
 // @route   PUT /manager/approvenurse
-// @desc    Register new nurse
+// @desc    Approve nurse
 // @access  protected: manager
 router.put(
   '/approvenurse',
   isAuthManager,
   [body('nurseId', 'Nurse id invalid/missing').trim().notEmpty()],
   managerController.approveNurse
+);
+
+// @route   PUT /manager/approvedoctor/:doctorId
+// @desc    Approve doctor
+// @access  protected: manager
+router.put(
+  '/approvedoctor',
+  isAuthManager,
+  [body('doctorId', 'Doctor id invalid/missing').trim().notEmpty()],
+  managerController.approveDoctor
 );
 
 // @route   DELETE /manager/nurse

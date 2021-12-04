@@ -2,7 +2,6 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../db/dbconnect').sequelize;
 
 const Doctor = sequelize.define('Doctor', {
-  // Model attributes are defined here
   first_name: {
     type: DataTypes.STRING(30),
     allowNull: false,

@@ -108,7 +108,7 @@ exports.createAppointment = async (req, res, next) => {
     });
   }
   const { nurse } = req;
-  const { datetime, location, note, patientId } = req.body;
+  const { datetime, location, note, patientId, saId } = req.body;
 
   // Check if appointment exists at this time
   const existingAppointments = await Appointment.findAll();
@@ -144,6 +144,7 @@ exports.createAppointment = async (req, res, next) => {
       note,
       patientId,
       nurseId: nurse.id,
+      saId,
     });
     return res.status(200).json({ appointment });
   } catch (e) {
@@ -260,5 +261,58 @@ exports.addComment = async (req, res, next) => {
   } catch (error) {
     console.log(error);
     return res.status(500).send({ errors: [{ msg: 'Server error' }] });
+  }
+};
+
+exports.requestDoctorAppointment = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      errors: errors.array(),
+    });
+  }
+  const { nurse } = req;
+  const { datetime, location, note, patientId, saId, doctorId } = req.body;
+
+  // Check if appointment exists at this time
+  const existingAppointments = await Appointment.findAll();
+  let flag = false;
+  existingAppointments.every((existingAppointment) => {
+    if (
+      doctorId === existingAppointment.doctorId ||
+      patientId === existingAppointment.patientId
+    ) {
+      let preferredTime = new Date(datetime);
+      let existingTime = new Date(existingAppointment.datetime);
+      let difference = Math.abs(
+        parseInt(preferredTime.getTime()) - parseInt(existingTime.getTime())
+      );
+      if (difference < 900000) {
+        flag = true;
+        return false;
+      }
+    }
+    return true;
+  });
+  if (flag) {
+    return res
+      .status(400)
+      .json({ errors: [{ msg: 'Failed to request appointment: time conflict' }] });
+  }
+
+  const datetimeJS = new Date(datetime);
+  try {
+    const appointment = await Appointment.create({
+      datetime: datetimeJS.toUTCString(),
+      location,
+      note,
+      patientId,
+      doctorId,
+      saId,
+    });
+    return res.status(200).json({ appointment });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).send('Server error');
   }
 };

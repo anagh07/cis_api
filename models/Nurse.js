@@ -2,7 +2,6 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../db/dbconnect').sequelize;
 
 const Nurse = sequelize.define('Nurse', {
-  // Model attributes are defined here
   first_name: {
     type: DataTypes.STRING(30),
     allowNull: false,
@@ -10,7 +9,6 @@ const Nurse = sequelize.define('Nurse', {
   last_name: {
     type: DataTypes.STRING(30),
     allowNull: false,
-    // allowNull defaults to true
   },
   dob: {
     type: DataTypes.DATEONLY,

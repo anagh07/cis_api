@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const Patient = require('../models/Patient');
 const Manager = require('../models/Manager');
 const Nurse = require('../models/Nurse');
+const Doctor = require('../models/Doctor');
 
 exports.login = async (req, res, next) => {
   // Check if input data has errors
@@ -31,7 +32,10 @@ exports.login = async (req, res, next) => {
     }
     const nurse = await Nurse.findOne({ where: { email } });
     if (nurse) return loginNurse(req, res, next, nurse);
-    // Implement login for nurse and doctor
+
+    const doctor = await Doctor.findOne({ where: { email } });
+    if (doctor) return loginDoctor(req, res, next, doctor);
+
     // If none then send error
     return res.status(400).json({ errors: [{ msg: 'User does not exist' }] });
   } catch (error) {
@@ -88,6 +92,38 @@ const loginNurse = async (req, res, next, nurse) => {
           id: nurse.id,
           email: nurse.email,
           auth: 'nurse',
+        },
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: 36000 }
+    );
+    return res.status(200).json({ token });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send('Server error');
+  }
+};
+
+const loginDoctor = async (req, res, next, doctor) => {
+  const { password } = req.body;
+
+  // Check if nurse has been approved by admin
+  if (!doctor.verified)
+    return res.status(403).json({ errors: [{ msg: 'Admin verification pending' }] });
+
+  try {
+    // Match password
+    const passwordMatch = await bcrypt.compare(password, doctor.password);
+    if (!passwordMatch) {
+      return res.status(400).json({ errors: [{ msg: 'Invalid credentials' }] });
+    }
+    // Return jwt
+    const token = await jwt.sign(
+      {
+        doctor: {
+          id: doctor.id,
+          email: doctor.email,
+          auth: 'doctor',
         },
       },
       process.env.JWT_SECRET,

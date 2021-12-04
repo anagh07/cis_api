@@ -98,4 +98,19 @@ router.post(
   nurseController.addComment
 );
 
+// @route   POST /nurse/appointmentWithDoctor
+// @desc    Request appointment with doctor
+// @access  protected
+router.post(
+  '/appointmentWithDoctor',
+  isAuthNurse,
+  [
+    body('datetime', 'datetime invalid/missing').trim().notEmpty(),
+    body('location', 'location missing').trim().notEmpty(),
+    body('patientId', 'patientId missing').trim().notEmpty(),
+    body('doctorId', 'doctorId missing').trim().notEmpty(),
+  ],
+  nurseController.requestDoctorAppointment
+);
+
 module.exports = router;

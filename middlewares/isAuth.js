@@ -40,6 +40,24 @@ exports.isAuthNurse = async (req, res, next) => {
   }
 };
 
+exports.isAuthDoctor = async (req, res, next) => {
+  const token = req.get('x-auth-token');
+  // Check if token not present
+  if (!token) {
+    return res.status(401).json({ errors: [{ msg: 'Invalid token, not logged in' }] });
+  }
+  // Verify token
+  try {
+    const verifiedToken = jwt.verify(token, process.env.JWT_SECRET);
+    if (verifiedToken.doctor.auth != 'doctor' && verifiedToken.manager.auth != 'manager')
+      return res.status(401).json({ errors: [{ msg: 'Unauthorized' }] });
+    req.doctor = verifiedToken.doctor;
+    next();
+  } catch (err) {
+    return res.status(401).json({ errors: [{ msg: 'Invalid token' }] });
+  }
+};
+
 exports.isAuthManager = async (req, res, next) => {
   const token = req.get('x-auth-token');
   // Check if token present

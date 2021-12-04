@@ -29,6 +29,7 @@ app.get('/', (req, res, next) => {
 app.use('/patient', require('./routes/patient'));
 app.use('/manager', require('./routes/manager'));
 app.use('/nurse', require('./routes/nurse'));
+app.use('/doctor', require('./routes/doctor'));
 app.use('/auth', require('./routes/auth'));
 app.use('/sa', require('./routes/selfassessment'));
 

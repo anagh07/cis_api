@@ -16,10 +16,16 @@ const Appointment = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    doctorAccepted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: null,
+    },
   }
   /*
   nurseId: foreignKey
   patientId: foreignKey
+  doctorId: foreignKey
+  saId: foreignKey
    */
 );
 
