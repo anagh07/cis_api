@@ -170,38 +170,25 @@ exports.getUser = async (req, res, next) => {
   try {
     // Get profile from db
     if (user.auth == 'patient') {
-      userProfile = await Patient.findByPk(user.id);
+      userProfile = await Patient.findByPk(user.id, {
+        attributes: { exclude: ['password'] },
+      });
     } else if (user.auth == 'manager') {
-      userProfile = await Manager.findByPk(user.id);
+      userProfile = await Manager.findByPk(user.id, {
+        attributes: { exclude: ['password'] },
+      });
     } else if (user.auth == 'nurse') {
-      userProfile = await Nurse.findByPk(user.id);
+      userProfile = await Nurse.findByPk(user.id, {
+        attributes: { exclude: ['password'] },
+      });
     } else {
-      userProfile = await Doctor.findByPk(user.id);
+      userProfile = await Doctor.findByPk(user.id, {
+        attributes: { exclude: ['password'] },
+      });
     }
     if (!userProfile)
       return res.status(400).json({ errors: [{ msg: 'Profile not found' }] });
-    const {
-      id,
-      first_name,
-      last_name,
-      email,
-      dob,
-      address,
-      phone,
-      auth,
-      registration_number,
-    } = userProfile;
-    return res.status(200).json({
-      id,
-      first_name,
-      last_name,
-      email,
-      dob,
-      address,
-      phone,
-      auth,
-      registration_number,
-    });
+    return res.status(200).json(userProfile);
   } catch (error) {
     console.log(error);
     return res.status(500).send('Server error');
