@@ -141,4 +141,14 @@ router.delete(
 // @access  protected: manager
 router.get('/patientlist', isAuthManager, managerController.patientList);
 
+// @route   GET /manager/report
+// @desc    Generate report
+// @access  protected: manager
+router.get('/report', isAuthManager, managerController.generateReport);
+
+// @route   GET /manager/report/download/:filename
+// @desc    Generate report
+// @access  protected: manager
+router.get('/report/download/:filename', isAuthManager, managerController.downloadReport);
+
 module.exports = router;

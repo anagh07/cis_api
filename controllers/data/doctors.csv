@@ -1,0 +1,2 @@
+id,first_name,last_name,dob,email,address,phone,registration_number,verified,createdAt
+1,Kenzo,Tenma,1992-01-01,tenma@gmail.com,123 Test Street,999-000-1234,D12345678909891,1,1638574923082

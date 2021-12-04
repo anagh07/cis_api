@@ -1,10 +1,15 @@
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const path = require('path');
+const { stringify } = require('csv-stringify/sync');
+const fs = require('fs');
 const Manager = require('../models/Manager');
 const Nurse = require('../models/Nurse');
 const Doctor = require('../models/Doctor');
 const Patient = require('../models/Patient');
+const Appointment = require('../models/Appointment');
+const SA = require('../models/SelfAssessment');
 
 exports.registerManager = async (req, res, next) => {
   // Check if input data has errors
@@ -386,5 +391,180 @@ exports.approveDoctor = async (req, res, next) => {
   } catch (error) {
     console.log(error);
     return res.status(500).send('Server error');
+  }
+};
+
+// @route   GET /manager/report
+// @desc    Generate report
+exports.generateReport = async (req, res, next) => {
+  try {
+    let patients = await Patient.findAll({ attributes: { exclude: ['password'] } });
+    let nurses = await Nurse.findAll({ attributes: { exclude: ['password'] } });
+    let doctors = await Doctor.findAll({ attributes: { exclude: ['password'] } });
+    let appointments = await Appointment.findAll();
+    let selfAssessments = await SA.findAll();
+    // Write patients csv
+    const dataFolder = path.normalize(__dirname + '/data');
+    if (!fs.existsSync(dataFolder)) {
+      fs.mkdirSync(dataFolder);
+    }
+    const patientPath = path.join(__dirname, 'data', 'patients.csv');
+    const nursePath = path.join(__dirname, 'data', 'nurses.csv');
+    const doctorPath = path.join(__dirname, 'data', 'doctors.csv');
+    const appointmentPath = path.join(__dirname, 'data', 'appointments.csv');
+    const saPath = path.join(__dirname, 'data', 'sa.csv');
+    let output = stringify(patients, {
+      header: true,
+      columns: [
+        'id',
+        'first_name',
+        'last_name',
+        'dob',
+        'email',
+        'address',
+        'phone',
+        'createdAt',
+      ],
+    });
+    fs.writeFile(patientPath, output, (err) => {
+      if (err) console.log(err);
+    });
+    // Write nurses csv
+    output = stringify(nurses, {
+      header: true,
+      columns: [
+        'id',
+        'first_name',
+        'last_name',
+        'dob',
+        'email',
+        'address',
+        'phone',
+        'registration_number',
+        'verified',
+        'createdAt',
+      ],
+    });
+    fs.writeFile(nursePath, output, (err) => {
+      if (err) console.log(err);
+    });
+    // Write doctors csv
+    output = stringify(doctors, {
+      header: true,
+      columns: [
+        'id',
+        'first_name',
+        'last_name',
+        'dob',
+        'email',
+        'address',
+        'phone',
+        'registration_number',
+        'verified',
+        'createdAt',
+      ],
+    });
+    fs.writeFile(doctorPath, output, (err) => {
+      if (err) console.log(err);
+    });
+    // Write appointments csv
+    output = stringify(appointments, {
+      header: true,
+      columns: [
+        'id',
+        'datetime',
+        'location',
+        'note',
+        'patientId',
+        'nurseId',
+        'doctorId',
+        'saId',
+        'createdAt',
+      ],
+    });
+    fs.writeFile(appointmentPath, output, (err) => {
+      if (err) console.log(err);
+    });
+    // Write self assessments csv
+    output = stringify(selfAssessments, {
+      header: true,
+      columns: [
+        'id',
+        'PatientId',
+        'q1',
+        'a1',
+        'q2',
+        'a2',
+        'q3',
+        'a3',
+        'q4',
+        'a4',
+        'q5',
+        'a5',
+        'q6',
+        'a6',
+        'q7',
+        'a7',
+        'nurseReviewed',
+        'nurseComment',
+        'rejected',
+        'createdAt',
+      ],
+    });
+    fs.writeFile(saPath, output, (err) => {
+      if (err) console.log(err);
+    });
+
+    res.status(200).json({
+      statistics: {
+        patients: patients.length,
+        nurses: nurses.length,
+        doctors: doctors.length,
+        selfAssessments: selfAssessments.length,
+        appointments: appointments.length,
+      },
+      paths: {
+        patients: patientPath,
+        nurses: nursePath,
+        doctors: doctorPath,
+        appointments: appointmentPath,
+        selfAssessments: saPath,
+      },
+      urls: {
+        patients: path.basename(patientPath),
+        nurses: path.basename(nursePath),
+        doctors: path.basename(doctorPath),
+        appointments: path.basename(appointmentPath),
+        selfAssessments: path.basename(saPath),
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ errors: [{ msg: 'Server error' }] });
+  }
+};
+
+// @route   GET /manager/report/download/:filename
+// @desc    Generate report
+exports.downloadReport = async (req, res, next) => {
+  const { filename } = req.params;
+  const fpath = path.join(__dirname, 'data', filename);
+  try {
+    switch (filename) {
+      case 'patients.csv':
+      case 'doctors.csv':
+      case 'nurses.csv':
+      case 'appointments.csv':
+      case 'sa.csv':
+        res.download(fpath);
+        break;
+
+      default:
+        res.status(404).json({ errors: [{ msg: 'File not found' }] });
+        break;
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ errors: [{ msg: 'Server error' }] });
   }
 };
