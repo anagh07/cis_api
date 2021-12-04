@@ -91,6 +91,7 @@ exports.isAuthAll = async (req, res, next) => {
     if (verifiedToken.patient) req.user = verifiedToken.patient;
     if (verifiedToken.manager) req.user = verifiedToken.manager;
     if (verifiedToken.nurse) req.user = verifiedToken.nurse;
+    if (verifiedToken.doctor) req.user = verifiedToken.doctor;
     next();
   } catch (err) {
     console.log(err);
