@@ -66,7 +66,7 @@ exports.getSelfAssessmentById = async (req, res, next) => {
   try {
     const sa = await SelfAssessment.findByPk(id);
     if (!sa) return res.status(400).json({ errors: [{ msg: 'Invalid token' }] });
-    return res.status(200).json({ sa });
+    return res.status(200).json(sa);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ errors: [{ msg: 'Server error' }] });
