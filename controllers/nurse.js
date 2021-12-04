@@ -6,6 +6,7 @@ const Patient = require('../models/Patient');
 const Appointment = require('../models/Appointment');
 const SelfAssessment = require('../models/SelfAssessment');
 const Comment = require('../models/Comment');
+const { findByPk } = require('../models/SelfAssessment');
 
 exports.registerNurse = async (req, res, next) => {
   const errors = validationResult(req);
@@ -146,10 +147,17 @@ exports.createAppointment = async (req, res, next) => {
       nurseId: nurse.id,
       saId,
     });
+
+    // Mark the self assessment as reviewed
+    const sa = await SelfAssessment.findByPk(saId);
+    if (sa) {
+      sa.nurseReviewed = true;
+      await sa.save();
+    }
     return res.status(200).json({ appointment });
   } catch (e) {
     console.log(e);
-    return res.status(500).send('Server error');
+    return res.status(500).json({ errors: [{ msg: 'Server error' }] });
   }
 };
 
@@ -271,7 +279,7 @@ exports.requestDoctorAppointment = async (req, res, next) => {
       errors: errors.array(),
     });
   }
-  const { nurse } = req;
+
   const { datetime, location, note, patientId, saId, doctorId } = req.body;
 
   // Check if appointment exists at this time
@@ -310,6 +318,13 @@ exports.requestDoctorAppointment = async (req, res, next) => {
       doctorId,
       saId,
     });
+
+    // Mark the self assessment as reviewed
+    const sa = await SelfAssessment.findByPk(saId);
+    if (sa) {
+      sa.nurseReviewed = true;
+      await sa.save();
+    }
     return res.status(200).json({ appointment });
   } catch (e) {
     console.log(e);
