@@ -109,7 +109,13 @@ exports.getAppointments = async (req, res, next) => {
   const { patient } = req;
   try {
     const appointments = await Appointment.findAll({ where: { patientId: patient.id } });
-    return res.status(200).json({ appointments });
+    const nurseApp = appointments.filter((appointment) => appointment.nurseId !== null);
+    const doctorApp = appointments.filter(
+      (appointment) =>
+        appointment.doctorId !== null && appointment.doctorAccepted === true
+    );
+    const finalApp = [...nurseApp, ...doctorApp];
+    return res.status(200).json({ appointments: finalApp });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ errors: [{ msg: 'Server error' }] });
