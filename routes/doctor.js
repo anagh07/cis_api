@@ -49,7 +49,7 @@ router.get('/appointments/pending', isAuthDoctor, doctorController.pendingAppoin
 // @access  protected
 router.post(
   '/patientsfromidlist',
-  isAuthDoctor,
+  isAuthAll,
   body('patientIds', 'Provide list of patient ids').isArray(),
   nurseController.getPatientsFromIdList
 );
