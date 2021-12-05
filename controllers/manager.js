@@ -143,6 +143,12 @@ exports.removeNurse = async (req, res, next) => {
   try {
     const nurse = await Nurse.findOne({ where: { email } });
     if (!nurse) return res.status(404).json({ errors: [{ msg: 'Nurse not found' }] });
+    const appointments = await Appointment.findAll({ where: { nurseId: nurse.id } });
+    appointments.forEach(async (appointment) => {
+      let selfass = await SA.findByPk(appointment.saId);
+      selfass.nurseReviewed = false;
+      await selfass.save();
+    });
     await nurse.destroy();
     return res.status(200).json({ msg: 'Deleted successfully' });
   } catch (error) {
@@ -241,6 +247,12 @@ exports.removeDoctor = async (req, res, next) => {
   const { email } = req.body;
   try {
     const doctor = await Doctor.findOne({ where: { email } });
+    const appointments = await Appointment.findAll({ where: { doctorId: doctor.id } });
+    appointments.forEach(async (appointment) => {
+      let selfass = await SA.findByPk(appointment.saId);
+      selfass.nurseReviewed = false;
+      await selfass.save();
+    });
     await doctor.destroy();
     return res.status(200).json({ msg: 'Deleted successfully' });
   } catch (error) {

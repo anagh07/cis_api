@@ -116,8 +116,8 @@ exports.createAppointment = async (req, res, next) => {
   let flag = false;
   existingAppointments.every((existingAppointment) => {
     if (
-      nurse.id === existingAppointment.nurseId ||
-      patientId === existingAppointment.patientId
+      nurse.id == existingAppointment.nurseId ||
+      patientId == existingAppointment.patientId
     ) {
       let preferredTime = new Date(datetime);
       let existingTime = new Date(existingAppointment.datetime);
@@ -287,8 +287,8 @@ exports.requestDoctorAppointment = async (req, res, next) => {
   let flag = false;
   existingAppointments.every((existingAppointment) => {
     if (
-      doctorId === existingAppointment.doctorId ||
-      patientId === existingAppointment.patientId
+      doctorId == existingAppointment.doctorId ||
+      patientId == existingAppointment.patientId
     ) {
       let preferredTime = new Date(datetime);
       let existingTime = new Date(existingAppointment.datetime);
@@ -305,7 +305,7 @@ exports.requestDoctorAppointment = async (req, res, next) => {
   if (flag) {
     return res
       .status(400)
-      .json({ errors: [{ msg: 'Failed to request appointment: time conflict' }] });
+      .json({ errors: [{ msg: 'Failed to create appointment: time conflict' }] });
   }
 
   const datetimeJS = new Date(datetime);
