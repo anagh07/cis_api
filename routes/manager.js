@@ -149,6 +149,6 @@ router.get('/report', isAuthManager, managerController.generateReport);
 // @route   GET /manager/report/download/:filename
 // @desc    Generate report
 // @access  protected: manager
-router.get('/report/download/:filename', isAuthManager, managerController.downloadReport);
+router.get('/report/download/:filename', managerController.downloadReport);
 
 module.exports = router;
