@@ -28,10 +28,10 @@ router.post(
 // @access  protected
 router.get('/', isAuthNurse, nurseController.getNurseProfile);
 
-// @route   GET /nurse/:nurseId
+// @route   GET /nurse/getProfile/:nurseId
 // @desc    Get nurse profile by nurse id
 // @access  protected
-router.get('/:nurseId', isAuthAll, nurseController.getNurseProfileById);
+router.get('/getProfile/:nurseId', isAuthAll, nurseController.getNurseProfileById);
 
 // @route   GET /nurse/patientlist
 // @desc    Retrieve list of all patients
