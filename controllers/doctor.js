@@ -167,3 +167,19 @@ exports.doctorList = async (req, res, next) => {
     return res.status(500).json({ errors: [{ msg: 'Server error' }] });
   }
 };
+
+// @route   GET /doctor/appointments/list/:doctorId
+// @desc    Get list of appointments for specific doctor
+exports.doctorAppointmentList = async (req, res, next) => {
+  const { doctorId } = req.params;
+  try {
+    let appointmentsList = await Appointment.findAll({
+      where: { doctorId: doctorId },
+    });
+    if (!appointmentsList) appointmentsList = [];
+    return res.status(200).json({ appointmentsList });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ errors: [{ msg: 'Server error' }] });
+  }
+};

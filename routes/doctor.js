@@ -69,4 +69,13 @@ router.put(
 // @access  protected
 router.get('/doctorlist', isAuthAll, doctorController.doctorList);
 
+// @route   GET /doctor/appointments/list/:doctorId
+// @desc    Get list of appointments for specific doctor
+// @access  protected
+router.get(
+  '/appointments/list/:doctorId',
+  isAuthAll,
+  doctorController.doctorAppointmentList
+);
+
 module.exports = router;
