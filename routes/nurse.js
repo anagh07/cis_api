@@ -71,7 +71,7 @@ router.get(
 router.get('/pendingsa', isAuthNurse, nurseController.getPendingSelfAssessments);
 
 // @route   GET /nurse/patientsfromidlist
-// @desc    Get list of pending self assessments
+// @desc    Get list of pending self assessments.
 // @access  protected
 router.post(
   '/patientsfromidlist',
