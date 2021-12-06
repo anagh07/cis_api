@@ -2,7 +2,7 @@ const express = require('express');
 const { body } = require('express-validator');
 const nurseController = require('../controllers/nurse');
 const patientController = require('../controllers/patient');
-const { isAuthNurse } = require('../middlewares/isAuth');
+const { isAuthNurse, isAuthAll } = require('../middlewares/isAuth');
 const router = express.Router();
 
 // @route   POST /nurse
@@ -27,6 +27,11 @@ router.post(
 // @desc    Get nurse profile
 // @access  protected
 router.get('/', isAuthNurse, nurseController.getNurseProfile);
+
+// @route   GET /nurse/:nurseId
+// @desc    Get nurse profile by nurse id
+// @access  protected
+router.get('/:nurseId', isAuthAll, nurseController.getNurseProfileById);
 
 // @route   GET /nurse/patientlist
 // @desc    Retrieve list of all patients

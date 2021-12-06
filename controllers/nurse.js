@@ -101,6 +101,21 @@ exports.getNurseProfile = async (req, res, next) => {
   }
 };
 
+exports.getNurseProfileById = async (req, res, next) => {
+  const { nurseId } = req.params;
+  try {
+    const nurseProfile = await Nurse.findByPk(nurseId, {
+      attributes: { exclude: ['password'] },
+    });
+    if (!nurseProfile)
+      return res.status(400).json({ errors: [{ msg: 'Profile not found' }] });
+    return res.status(200).json(nurseProfile);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send('Server error');
+  }
+};
+
 exports.createAppointment = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {

@@ -29,6 +29,11 @@ router.post(
 // @access  protected
 router.get('/', isAuthDoctor, doctorController.getDoctorProfile);
 
+// @route   GET /doctor/:doctorId
+// @desc    Get doctor profile by id
+// @access  protected
+router.get('/:doctorId', isAuthAll, doctorController.getDoctorProfileById);
+
 // @route   GET /doctor/patientlist
 // @desc    Retrieve list of all patients
 // @access  protected: manager, doctor,

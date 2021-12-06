@@ -102,6 +102,19 @@ exports.getDoctorProfile = async (req, res, next) => {
   }
 };
 
+exports.getDoctorProfileById = async (req, res, next) => {
+  const { doctorId } = req.params;
+  try {
+    const doctorProfile = await Doctor.findByPk(doctorId);
+    if (!doctorProfile)
+      return res.status(400).json({ errors: [{ msg: 'Profile not found' }] });
+    return res.status(200).json(doctorProfile);
+  } catch (error) {
+    console.log(e);
+    return res.status(500).json({ errors: [{ msg: 'Server error' }] });
+  }
+};
+
 exports.getAppointmentsList = async (req, res, next) => {
   const { doctor } = req;
   try {
