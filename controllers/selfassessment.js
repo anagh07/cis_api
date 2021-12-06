@@ -2,6 +2,7 @@ const { validationResult } = require('express-validator');
 const SelfAssessment = require('../models/SelfAssessment');
 const Patient = require('../models/Patient');
 const Comment = require('../models/Comment');
+const Appointment = require('../models/Appointment');
 
 exports.submitSelfAssessment = async (req, res, next) => {
   // Check if input data has errors
@@ -13,18 +14,32 @@ exports.submitSelfAssessment = async (req, res, next) => {
   }
 
   // Check if user has pending Self Assessment
-  const existingSA = await SelfAssessment.findOne({
+  const existingSA = await SelfAssessment.findAll({
     where: { PatientId: req.patient.id, rejected: false },
   });
-  if (existingSA) {
-    let errorMsg =
-      'Failed to self assessment form (reason: duplicate). Your last submission is under review with: ';
-    if (!existingSA.nurseReviewed) {
-      errorMsg += 'a nurse.';
-      return res.status(403).json({ errors: [{ msg: errorMsg }] });
+  if (existingSA.length !== 0) {
+    const sortedSA = existingSA.sort((sa1, sa2) => {
+      let dsa1 = new Date(sa1.updatedAt);
+      let dsa2 = new Date(sa2.updatedAt);
+      return dsa2 - dsa1;
+    });
+    if (!sortedSA[0].nurseReviewed) {
+      return res.status(403).json({
+        errors: [
+          { msg: 'Cannot submit, curernt submission pending review with a nurse.' },
+        ],
+      });
     } else {
-      errorMsg += 'a doctor.';
-      return res.status(403).json({ errors: [{ msg: errorMsg }] });
+      const doctorApp = await Appointment.findOne({
+        where: { saId: sortedSA[0].id, nurseId: null, doctorAccepted: null },
+      });
+      if (doctorApp) {
+        return res.status(403).json({
+          errors: [
+            { msg: 'Cannot submit, curernt submission pending review with a doctor.' },
+          ],
+        });
+      }
     }
   }
 

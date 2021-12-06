@@ -309,7 +309,7 @@ exports.requestDoctorAppointment = async (req, res, next) => {
       let difference = Math.abs(
         parseInt(preferredTime.getTime()) - parseInt(existingTime.getTime())
       );
-      if (difference < 900000) {
+      if (difference < 900000 && existingAppointment.doctorAccepted !== false) {
         flag = true;
         return false;
       }
