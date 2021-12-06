@@ -6,7 +6,6 @@ const Patient = require('../models/Patient');
 const Appointment = require('../models/Appointment');
 const SelfAssessment = require('../models/SelfAssessment');
 const Comment = require('../models/Comment');
-const { findByPk } = require('../models/SelfAssessment');
 
 exports.registerNurse = async (req, res, next) => {
   const errors = validationResult(req);

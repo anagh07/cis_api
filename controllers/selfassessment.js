@@ -12,6 +12,22 @@ exports.submitSelfAssessment = async (req, res, next) => {
     });
   }
 
+  // Check if user has pending Self Assessment
+  const existingSA = await SelfAssessment.findOne({
+    where: { PatientId: req.patient.id, rejected: false },
+  });
+  if (existingSA) {
+    let errorMsg =
+      'Failed to self assessment form (reason: duplicate). Your last submission is under review with: ';
+    if (!existingSA.nurseReviewed) {
+      errorMsg += 'a nurse.';
+      return res.status(403).json({ errors: [{ msg: errorMsg }] });
+    } else {
+      errorMsg += 'a doctor.';
+      return res.status(403).json({ errors: [{ msg: errorMsg }] });
+    }
+  }
+
   const { a1, a2, a3, a4, a5, a6, a7 } = req.body;
   try {
     const selfAssessment = await SelfAssessment.create({

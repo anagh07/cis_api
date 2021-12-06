@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 
 const Doctor = require('../models/Doctor');
 const Appointment = require('../models/Appointment');
+const SelfAssessment = require('../models/SelfAssessment');
 
 // @route   POST /doctor
 // @desc    Register new doctor
@@ -160,6 +161,11 @@ exports.acceptRejectAppointment = async (req, res, next) => {
     appointment.doctorAccepted = accepted;
     await appointment.save();
     appointment = await Appointment.findByPk(appointmentId);
+    if (appointment.doctorAccepted === false) {
+      const sa = await SelfAssessment.findByPk(appointment.saId);
+      sa.rejected = true;
+      await sa.save();
+    }
     return res.status(200).json({ msg: 'Success', appointment });
   } catch (e) {
     console.log(e);
