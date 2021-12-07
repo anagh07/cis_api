@@ -642,7 +642,7 @@ exports.appointmentsInDuration = async (req, res, next) => {
     const totalAppCount = filteredApp.length;
 
     res.status(200).json({
-      selfAssessments: filteredApp,
+      appointments: filteredApp,
       totalAppCount,
     });
   } catch (error) {
