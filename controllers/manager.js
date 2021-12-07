@@ -10,6 +10,7 @@ const Doctor = require('../models/Doctor');
 const Patient = require('../models/Patient');
 const Appointment = require('../models/Appointment');
 const SA = require('../models/SelfAssessment');
+const SelfAssessment = require('../models/SelfAssessment');
 
 exports.registerManager = async (req, res, next) => {
   // Check if input data has errors
@@ -575,6 +576,75 @@ exports.downloadReport = async (req, res, next) => {
         res.status(404).json({ errors: [{ msg: 'File not found' }] });
         break;
     }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ errors: [{ msg: 'Server error' }] });
+  }
+};
+
+// @route   PUT /manager/report/sa
+// @desc    Get self assessments in duration
+exports.selfAssessmentDuration = async (req, res, next) => {
+  const { from, to } = req.body;
+  let fromUTC = new Date(from);
+  let toUTC = new Date(to);
+
+  try {
+    let sas = await SelfAssessment.findAll();
+    let filteredSas = sas.filter((sa) => {
+      if (
+        Number(sa.createdAt) <= Number(toUTC) &&
+        Number(sa.createdAt >= Number(fromUTC))
+      ) {
+        return true;
+      }
+    });
+
+    const totalSasCount = filteredSas.length;
+    let rejectedSasCount = 0;
+    let pendingSasCount = 0;
+
+    filteredSas.map((sa) => {
+      if (sa.rejected) rejectedSasCount++;
+      if (!sa.rejected) pendingSasCount++;
+    });
+
+    res.status(200).json({
+      selfAssessments: filteredSas,
+      totalSasCount,
+      rejectedSasCount,
+      pendingSasCount,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ errors: [{ msg: 'Server error' }] });
+  }
+};
+
+// @route   PUT /manager/report/appointments
+// @desc    Get self appointments in duration
+exports.appointmentsInDuration = async (req, res, next) => {
+  const { from, to } = req.body;
+  let fromUTC = new Date(from);
+  let toUTC = new Date(to);
+
+  try {
+    let app = await Appointment.findAll();
+    let filteredApp = app.filter((app) => {
+      if (
+        Number(app.createdAt) <= Number(toUTC) &&
+        Number(app.createdAt >= Number(fromUTC))
+      ) {
+        return true;
+      }
+    });
+
+    const totalAppCount = filteredApp.length;
+
+    res.status(200).json({
+      selfAssessments: filteredApp,
+      totalAppCount,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ errors: [{ msg: 'Server error' }] });

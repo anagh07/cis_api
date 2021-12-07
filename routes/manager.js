@@ -146,6 +146,32 @@ router.get('/patientlist', isAuthManager, managerController.patientList);
 // @access  protected: manager
 router.get('/report', isAuthManager, managerController.generateReport);
 
+// @route   PUT /manager/report/sa
+// @desc    Get self assessments in duration
+// @access  protected: manager
+router.put(
+  '/report/sa',
+  isAuthManager,
+  [
+    body('from', 'from attribute missing').trim().notEmpty(),
+    body('to', 'to attribute missing').trim().notEmpty(),
+  ],
+  managerController.selfAssessmentDuration
+);
+
+// @route   PUT /manager/report/appointments
+// @desc    Get self appointments in duration
+// @access  protected: manager
+router.put(
+  '/report/appointments',
+  isAuthManager,
+  [
+    body('from', 'from attribute missing').trim().notEmpty(),
+    body('to', 'to attribute missing').trim().notEmpty(),
+  ],
+  managerController.appointmentsInDuration
+);
+
 // @route   GET /manager/report/download/:filename
 // @desc    Generate report
 // @access  protected: manager
